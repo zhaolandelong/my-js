@@ -1,4 +1,5 @@
 # my-js author zldl
+---
 自己整理和手写的一些常用功能，用法：
 1、直接引入当前js文件，可在全局window下生成一个util对象，用util.xxx来调用各方法，如util.urlParam('id')，获取url中id参数
 2、require引入当前js文件，如var aaa=require('zldl-js');aaa.urlParam('id')，获取url中id参数
