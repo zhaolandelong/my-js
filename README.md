@@ -6,16 +6,16 @@
 
 自定义的方法：
 
->1.获取url中的参数：urlParam(paramName);  
+>1、获取url中的参数：urlParam(paramName);  
 //paramName要获得的参数名
 
->2.获取cookie中的参数：getCookie(cookieName);  
+>2、获取cookie中的参数：getCookie(cookieName);  
 //要获得的cookie名
 
->3.针对JSON的ajax请求：ajaxForJson(url, type, data, succFun, failFun)  
+>3、针对JSON的ajax请求：ajaxForJson(url, type, data, succFun, failFun)  
 //url ajax的url；type 请求方式类型'GET','POST'；data 要传的数据；succFun 成功回调；failFun 失败回调
 
->4.判断当前设备是否是android：isAndroid  
+>4、判断当前设备是否是android：isAndroid  
 //直接是布尔值，而不是函数
 
 >5、当前元素自动滚动到可视区域：scrollIntoView(dom)  
