@@ -14,10 +14,11 @@
             var arr = [],reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
             return (arr=document.cookie.match(reg))?arr[2]:null;
         },
-        //专门获取JSON的ajax，url ajax url，type 请求方式类型'GET','POST'，data 要传的数据，succFun 成功回调，failFun 失败回调
-        ajaxForJson : function(url, type, data, succFun, failFun){
+        //专门获取JSON的ajax，url ajax url，type 请求方式类型'GET','POST'，data 要传的数据，succFun 成功回调，failFun 失败回调, async是否异步
+        ajaxForJson : function(url, type, data, succFun, failFun, async){
             //创建XMLHttpRequest对象
-            var XMLHttpReq;
+            var XMLHttpReq,
+            _async = typeof(async)=='undefined'||async;
             try {
                 XMLHttpReq = new ActiveXObject("Msxml2.XMLHTTP"); //IE高版本创建XMLHTTP
             } catch (E) {
@@ -27,7 +28,7 @@
                     XMLHttpReq = new XMLHttpRequest(); //兼容非IE浏览器，直接创建XMLHTTP对象
                 }
             }
-            XMLHttpReq.open(type, url, true);
+            XMLHttpReq.open(type, url, _async);
             //指定响应函数
             XMLHttpReq.onreadystatechange = function() {
                 if (XMLHttpReq.readyState == 4) {
@@ -54,7 +55,23 @@
                     dom.scrollIntoView(true);
                 }
             }
-        }
+        },
+        //两数相加，防止出现0.1+0.7==>0.79999999999
+		mathAdd : function(a, b) {
+			var r1, r2, m;
+			try {
+				r1 = a.toString().split('.')[1].length;
+			} catch (e) {
+				r1 = 0;
+			}
+			try {
+				r2 = b.toString().split('.')[1].length;
+			} catch (e) {
+				r2 = 0;
+			}
+			m = Math.pow(10, Math.max(r1, r2));
+			return (a * m + b * m) / m;
+		},
     };
     // 对Date的扩展，将 Date 转化为指定格式的String
     // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
