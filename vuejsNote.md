@@ -21,9 +21,10 @@ template:&lt;div>我是头&lt;/div>&lt;div>我是尾&lt;/div>
 >我是尾  
 
 如果myFrame模板为：  
-template:&lt;div>我是头&lt;/div>&lt;slot>&lt;/slot>&lt;div>我是尾&lt/div>  
+template:&lt;div>我是头&lt;/div>&lt;slot>&lt;/slot>&lt;div>我是尾&lt;/div>  
 最后渲染的是：  
 >我是头  
 >如果不用slot，我就不会显示哦  
 >我是尾  
+
 很有用哦
