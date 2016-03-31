@@ -13,14 +13,14 @@ html代码：<my-frame>如果不用slot，我就不会显示哦</my-frame>
 如果myFrame模板为：
 template:<div>我是头</div><div>我是尾</div>
 最后渲染的是：
->我是头
->我是尾
+>我是头  
+>我是尾  
 
 如果myFrame模板为：
 template:<div>我是头</div><slot></slot><div>我是尾</div>
 最后渲染的是：
->我是头
->如果不用slot，我就不会显示哦
->我是尾
+>我是头  
+>如果不用slot，我就不会显示哦  
+>我是尾  
 
 很有用哦
