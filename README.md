@@ -21,8 +21,11 @@
 >5、当前元素自动滚动到可视区域：scrollIntoView(dom)  
 //需要传入dom元素，做了IOS、android兼容
 
->6、两数相加：mathAdd(a,b)  
-//防止出现0.1+0.7==>0.79999999999
+>6、两数相加：add(a,b)  
+//防止出现0.1+0.7==>0.79999999999  
+
+>7、获取url中资源前的全路径：fullPath  
+//例：http://www.baidu.com/images/co/page/logo.jpg ==> http://www.baidu.com/images/co/page/
 
 为原生对象添加的方法：
 
