@@ -56,6 +56,105 @@
             };
             XMLHttpReq.send(data);
         },
+        ajax: function(options) {
+            //默认参数
+            var _options = {
+                async: true
+            };
+            var xhr;
+            //覆盖默认参数对象
+            if (Object.prototype.toString.call(options) == '[object Object]') {
+                for (var pname in options) {
+                    _options[pname] = options[pname];
+                }
+            }
+            //生成xhr对象
+            try {
+                xhr = new XMLHttpRequest(); //直接创建
+            } catch (e) {
+                try {
+                    xhr = new ActiveXObject("Msxml2.XMLHTTP"); //IE高版本创建XMLHTTP
+                } catch (e) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP"); //IE低版本创建XMLHTTP
+                }
+            }
+            var doAjax = function(url, data, method) {
+                //开始执行ajax
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4) {
+                        var resJson = JSON.parse(xhr.responseText || null);
+                        //执行always里面的函数
+                        for (var i = 0, l = main.alwaysCallbacks.length; i < l; i++) {
+                            main.alwaysCallbacks[i](resJson);
+                        }
+                        if (xhr.status == 200) {
+                            //执行sucCallbacks里面的函数
+                            for (var i = 0, l = main.sucCallbacks.length; i < l; i++) {
+                                main.sucCallbacks[i](resJson);
+                            }
+                        } else {
+                            //执行errCallbacks里面的函数
+                            for (var i = 0, l = main.errCallbacks.length; i < l; i++) {
+                                main.errCallbacks[i](resJson);
+                            }
+                        }
+                    }
+                }
+                xhr.open(method, url, _options.async);
+                xhr.send(data || null);
+            }
+            var main = {
+                xhr: xhr,
+                sucCallbacks: [],
+                errCallbacks: [function(err) { console.log(err) }],
+                alwaysCallbacks: [],
+                options: _options,
+                get: function(url, data) {
+                    doAjax(url, data, 'GET');
+                    return main;
+                },
+                post: function(url, data) {
+                    doAjax(url, data, 'POST');
+                    return main;
+                }
+            };
+            /**
+             * 设置多个请求头
+             * @param  {object} headers
+             */
+            main.headers = function(headers) {
+                if (Object.prototype.toString.call(headers) === '[object Object]') {
+                    for (var name in headers) {
+                        main.xhr.setRequestHeader(name, headers[name]);
+                    }
+                }
+            };
+            /**
+             * 设置前置处理方法
+             * @param  {Function} callback
+             */
+            main.before = function(callback) {
+                typeof(callback) === 'function' && callback(main.xhr);
+                return main;
+            };
+            /**
+             * 分别是成功、失败、完成的回调函数
+             * @param  {Function} callback [description]
+             */
+            main.success = function(callback) {
+                typeof(callback) === 'function' && main.sucCallbacks.push(callback);
+                return main;
+            };
+            main.error = function(callback) {
+                typeof(callback) === 'function' && main.errCallbacks.push(callback);
+                return main;
+            };
+            main.always = function(callback) {
+                typeof(callback) === 'function' && main.alwaysCallbacks.push(callback);
+                return main;
+            };
+            return main;
+        },
         //两数相加，防止出现0.1+0.7==>0.79999999999
         add: function(a, b) {
             var r1, r2, m;
