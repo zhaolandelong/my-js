@@ -25,7 +25,12 @@
 //防止出现0.1+0.7==>0.79999999999  
 
 >7、获取url中资源前的全路径：fullPath  
-//例：http://www.baidu.com/images/co/page/logo.jpg ==> http://www.baidu.com/images/co/page/
+//例：http://www.baidu.com/images/co/page/logo.jpg ==> http://www.baidu.com/images/co/page/  
+
+>8、可链式调用的ajax：ajax()  
+//ajax({async: true, //是否异步
+                contentType: 'application/json; charset=utf-8', //head编码方式，默认json
+                jsonForce: true //是否强制要求返回格式为json}).before(function(xhr){}).get|post(url,data).suc(function(res){}).suc(function(res){}).err(function(err){}).always(function(){})
 
 为原生对象添加的方法：
 
