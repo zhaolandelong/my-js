@@ -29,23 +29,27 @@
          */
         ajaxForJson: function(url, type, data, succFun, failFun, async) {
             //创建XMLHttpRequest对象
-            var XMLHttpReq,
+            var xhr,
                 _async = typeof(async) == 'undefined' || async;
             try {
-                XMLHttpReq = new ActiveXObject("Msxml2.XMLHTTP"); //IE高版本创建XMLHTTP
-            } catch (E) {
+                xhr = new XMLHttpRequest(); //直接创建
+            } catch (e) {
                 try {
-                    XMLHttpReq = new ActiveXObject("Microsoft.XMLHTTP"); //IE低版本创建XMLHTTP
-                } catch (E) {
-                    XMLHttpReq = new XMLHttpRequest(); //兼容非IE浏览器，直接创建XMLHTTP对象
+                    xhr = new ActiveXObject("Msxml2.XMLHTTP"); //IE高版本创建XMLHTTP
+                } catch (e) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP"); //IE低版本创建XMLHTTP
                 }
             }
-            XMLHttpReq.open(type, url, _async);
+            xhr.open(type, url, _async);
+            //指定参数为json
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(data);
             //指定响应函数
-            XMLHttpReq.onreadystatechange = function() {
-                if (XMLHttpReq.readyState == 4) {
-                    var jsonData = JSON.parse(XMLHttpReq.responseText)
-                    if (XMLHttpReq.status == 200) {
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    var jsonData = JSON.parse(xhr.responseText)
+                    var _status = xhr.status;
+                    if (_status >= 200 && _status < 300 || _status === 304) {
                         //成功
                         succFun(jsonData);
                     } else {
@@ -54,12 +58,13 @@
                     }
                 }
             };
-            XMLHttpReq.send(data);
         },
         ajax: function(options) {
             //默认参数
             var _options = {
-                async: true
+                async: true, //是否异步
+                contentType: 'application/json; charset=utf-8', //head编码方式，默认json
+                jsonForce: true //是否强制要求返回格式为json
             };
             var xhr;
             //覆盖默认参数对象
@@ -82,31 +87,40 @@
                 //开始执行ajax
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4) {
-                        var resJson = JSON.parse(xhr.responseText || null);
                         //执行always里面的函数
                         for (var i = 0, l = main.alwaysCallbacks.length; i < l; i++) {
-                            main.alwaysCallbacks[i](resJson);
+                            main.alwaysCallbacks[i](xhr.responseText, xhr);
                         }
-                        if (xhr.status == 200) {
-                            //执行sucCallbacks里面的函数
-                            for (var i = 0, l = main.sucCallbacks.length; i < l; i++) {
-                                main.sucCallbacks[i](resJson);
-                            }
-                        } else {
+                        //返回结果转换为json
+                        var resJson;
+                        try {
+                            resJson = JSON.parse(xhr.responseText || null);
+                        } catch (e) {
+                            resJson = undefined;
+                        }
+                        var status = xhr.status;
+                        if (status < 200 || (status >= 300 && status != 304) || (_options.jsonForce && typeof(resJson) === 'undefined')) {
                             //执行errCallbacks里面的函数
                             for (var i = 0, l = main.errCallbacks.length; i < l; i++) {
-                                main.errCallbacks[i](resJson);
+                                main.errCallbacks[i](xhr.responseText, xhr);
+                            }
+                        } else {
+                            //执行sucCallbacks里面的函数
+                            for (var i = 0, l = main.sucCallbacks.length; i < l; i++) {
+                                main.sucCallbacks[i](resJson, xhr);
                             }
                         }
                     }
                 }
                 xhr.open(method, url, _options.async);
+                //如果是post要改变头
+                method === "POST" && xhr.setRequestHeader("Content-Type", _options.contentType);
                 xhr.send(data || null);
             }
             var main = {
                 xhr: xhr,
                 sucCallbacks: [],
-                errCallbacks: [function(err) { console.log(err) }],
+                errCallbacks: [function(err) { console.error('responseText:' + err) }],
                 alwaysCallbacks: [],
                 options: _options,
                 get: function(url, data) {
@@ -125,7 +139,9 @@
             main.headers = function(headers) {
                 if (Object.prototype.toString.call(headers) === '[object Object]') {
                     for (var name in headers) {
-                        main.xhr.setRequestHeader(name, headers[name]);
+                        console.log(name + ' ' + headers[name]);
+                        console.log(xhr)
+                        xhr.setRequestHeader(name, headers[name]);
                     }
                 }
             };
@@ -141,11 +157,11 @@
              * 分别是成功、失败、完成的回调函数
              * @param  {Function} callback [description]
              */
-            main.success = function(callback) {
+            main.suc = function(callback) {
                 typeof(callback) === 'function' && main.sucCallbacks.push(callback);
                 return main;
             };
-            main.error = function(callback) {
+            main.err = function(callback) {
                 typeof(callback) === 'function' && main.errCallbacks.push(callback);
                 return main;
             };
@@ -182,7 +198,7 @@
             }
         },
         //获取url全路径
-        path: function() {
+        fullPath: function() {
             var e = location.href,
                 i = e.lastIndexOf('/');
             return e.substring(0, i + 1);
