@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>demo</title>
+</head>
+<body>
+	<h2>说明：</h2>
+	<p>
+	1、引入dialog-zldl.js则已经在window下生成了ui对象，若想改变主对象名字可在引入的src中添加name参数，例
+	</p>
+	<h6>&lt;script type="text/javascript" src="../dialog-zldl.js?name=myUI"&gt;&lt;/script&gt;</h6>
+	<p>这样全局对象就从ui变成了myUI</p>
+	<p>
+	2、做了模块兼容，可用amd，cmd的方式引用，若需要改变样式，需要调用ui.style('default')
+	</p>
+	<h2>事例：</h2>
+	<h5>ui.alert(txt, callback, title, btns)</h5>
+	<p>显示的文本，成功回调（可省）,标题（默认：提示）,按钮名</p>
+	<button id="alert">test alert</button>
+	<h5>ui.confirm(txt, sucFun, failFun, title, btns)</h5>
+	<p>显示的文本，成功回调（可省），失败回调（可省）,标题（默认：提示）,按钮名</p>
+	<button id="confirm">test confirm</button>
+	<script src="../../../lib/jquery-1.11.3.js"></script>
+	<script src="../../../lib/sea.js"></script>
+	<script>
+		seajs.config({
+			alias: {
+				ui: '../dialog-zldl.js'
+			}
+		});
+		seajs.use('ui',function(a){
+			$('#alert').on('click',function(){
+				a.alert('测试alert了哦~');
+			});
+			$('#confirm').on('click',function(){
+				a.alert('测试confirm了哦~');
+			});
+		});
+	</script>
+</body>
+</html>
