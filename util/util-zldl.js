@@ -202,6 +202,35 @@
             var e = location.href,
                 i = e.lastIndexOf('/');
             return e.substring(0, i + 1);
+        },
+        /**
+         * banner循环滚动
+         * @param dom {[dom]} banner体
+         * @param time {[number]} 停顿多久，单位毫秒
+         * @param speed {[number]} 播放速度，单位毫秒
+         * @param num {[number]} 图片数量
+         * @return {[type]}
+         */
+        bannerScroll: function(dom, time, speed, num) {
+            var _num = num - 1,
+                i = 0,
+                ms = 40,
+                tap = speed / ms,
+                skip = 100 / tap,
+                left = +dom.style.left.replace('%', '');
+            if (left + _num * 100 == 0) {
+                skip *= -_num
+            }
+            var s = setInterval(function() {
+                if (i < tap) {
+                    i++;
+                    dom.style.left = left - i * skip + '%';
+                } else {
+                    clearInterval(s);
+                    s = null;
+                }
+            }, ms);
+            setTimeout(e.bannerScroll.bind(null, dom, time, speed, num), time);
         }
     };
     // 对Date的扩展，将 Date 转化为指定格式的String
