@@ -2,7 +2,7 @@
  * Created by zhaoldl on 2016/3/17.工具类
  */
 ! function() {
-    var e = {
+    var util = {
         /**
          * [isAndroid 是否是安卓 true-是 false-不是]
          * @type {Boolean}
@@ -360,7 +360,7 @@
                 fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
     };
-    "object" == typeof exports ? module.exports = e : "function" == typeof define && (define.cmd || define.amd) ? define(function() {
-        return e
-    }) : this.util = e;
+    "object" == typeof exports ? module.exports = util : "function" == typeof define && (define.cmd || define.amd) ? define(function() {
+        return util
+    }) : this.util = util;
 }()

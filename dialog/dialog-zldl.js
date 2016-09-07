@@ -24,7 +24,7 @@
                     "default": 'x<style>#' + mid + '{position: fixed; z-index: 9998; top: 0; right: 0; bottom: 0; left: 0; opacity: .4; background-color: #000; filter: alpha(opacity=40);} #' + tid + '{font-family: "Microsoft Yahei"; position: fixed; z-index: 9999; top: 200px; right: 0; left: 0; box-sizing: border-box; width: 300px; margin: auto; padding: 14px; text-align: right; color: #333; border-radius: 3px; background-color: #fff;} #' + tid + ' > h1{font-size: 20px; font-weight: normal; line-height: 36px; margin: 0; padding-bottom: 10px; text-align: left; color: #333; border-bottom: #e0e0e0 1px solid;} #' + tid + ' > span{font-size: 24px; font-weight: 600; position: absolute; top: 6px; right: 14px; cursor: pointer; color: #bababa;} #' + tid + ' > p{font-size: 14px; margin: 0; padding: 10px; text-align: left;} #' + tid + ' > button{font-size: 14px; line-height: 32px; min-width: 70px; margin: 10px 4px; cursor: pointer; text-align: center; color: #333; border: #e0e0e0 1px solid; border-radius: 3px; background-color: #fff;} #' + tid + ' > button.active{color: #fff; border: none; background-color: #2797ef;}#' + tsid + '{position:fixed;top:0;width:100%;line-height:20px;text-align:center;padding:20px;color:#fff;z-index:9999;}</style>'
                 };
             //为了兼容ie8，慎动！！！
-            x.innerHTML = dialogStyle[type]||dialogStyle['default'];
+            x.innerHTML = dialogStyle[type] || dialogStyle['default'];
             document.getElementsByTagName('head')[0].appendChild(x.lastChild);
         },
         getParam: function(param, url) {
@@ -93,8 +93,9 @@
             }
         },
         hideLoading: function(callback) {
+            var _cb = callback || function() {};
             if (ui.o.loading) {
-                callback();
+                _cb();
                 ui.remove();
                 ui.o.loading = false;
             }
