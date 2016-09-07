@@ -3,22 +3,33 @@
  */
 ! function() {
     var e = {
-        //判断是否是Android
+        /**
+         * [isAndroid 是否是安卓 true-是 false-不是]
+         * @type {Boolean}
+         */
         isAndroid: navigator.userAgent.indexOf('Android') != -1 || navigator.userAgent.indexOf('Linux') != -1,
-        //获取url中的参数
+        /**
+         * [urlParam 获取url中的参数]
+         * @param  {[type]} param [要获取的参数key]
+         * @return {[type]}       [description]
+         */
         urlParam: function(param) {
             var reg = new RegExp('(^|&)' + param + '=([^&]*)(&|$)'),
                 r = window.location.search.substr(1).match(reg);
             return r != null ? decodeURIComponent(r[2]) : null;
         },
-        //获取cookie
+        /**
+         * [getCookie 获取cookie]
+         * @param  {[type]} name [要获取的cookie key]
+         * @return {[type]}      [description]
+         */
         getCookie: function(name) {
             var arr = [],
                 reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
             return (arr = document.cookie.match(reg)) ? arr[2] : null;
         },
         /**
-         * [ajaxForJson description]
+         * [ajaxForJson 简单包装的json ajax]
          * @param  {[type]} url     [ajax url]
          * @param  {[type]} type    ['GET','POST',...]
          * @param  {[type]} data    [jsondata]
@@ -59,6 +70,11 @@
                 }
             };
         },
+        /**
+         * [ajax 可链式调用的ajax，功能较完善]
+         * @param  {[type]} options [配置对象，可配置各种参数]
+         * @return {[type]}         [description]
+         */
         ajax: function(options) {
             //默认参数
             var _options = {
@@ -171,7 +187,11 @@
             };
             return main;
         },
-        //两数相加，防止出现0.1+0.7==>0.79999999999
+        /**
+         * [add 两数相加，防止出现0.1+0.7==>0.79999999999]
+         * @param {[type]} a [description]
+         * @param {[type]} b [description]
+         */
         add: function(a, b) {
             var r1, r2, m;
             try {
@@ -187,7 +207,11 @@
             m = Math.pow(10, Math.max(r1, r2));
             return (a * m + b * m) / m;
         },
-        //自动移动到可视区域，如果是IOS直接滚，如果是android，已唤出输入法就直接滚否则要监听onresize事件,注意IE不支持outerHeight
+        /**
+         * [scrollIntoView 自动移动到可视区域，如果是IOS直接滚，如果是android，已唤出输入法就直接滚否则要监听onresize事件,注意IE不支持outerHeight]
+         * @param  {[type]} dom [base dom]
+         * @return {[type]}     [description]
+         */
         scrollIntoView: function(dom) {
             if ((navigator.userAgent.indexOf('Android') == -1 && navigator.userAgent.indexOf('Linux') == -1) || (document.body.offsetHeight < window.outerHeight)) {
                 dom.scrollIntoView(true);
@@ -197,40 +221,120 @@
                 }
             }
         },
-        //获取url全路径
+        /**
+         * [fullPath 获取url全路径，即最后一个/之前的所有]
+         * @return {[type]} [description]
+         */
         fullPath: function() {
             var e = location.href,
                 i = e.lastIndexOf('/');
             return e.substring(0, i + 1);
         },
         /**
-         * banner循环滚动
-         * @param dom {[dom]} banner体
-         * @param time {[number]} 停顿多久，单位毫秒
-         * @param speed {[number]} 播放速度，单位毫秒
-         * @param num {[number]} 图片数量
-         * @return {[type]}
+         * [showLoading work with hideLoading() not good enough]
+         * @param  {[type]} txt  [description]
+         * @param  {[type]} icon [description]
+         * @return {[type]}      [description]
          */
-        bannerScroll: function(dom, time, speed, num) {
-            var _num = num - 1,
-                i = 0,
-                ms = 40,
-                tap = speed / ms,
-                skip = 100 / tap,
-                left = +dom.style.left.replace('%', '');
-            if (left + _num * 100 == 0) {
-                skip *= -_num
+        showLoading: function(txt,icon) {
+            var id = 'id_dataLoading',
+                _txt = txt || '加载中…',
+                _icon = icon || 'https://o9xctjw8r.qnssl.com/loading2.gif';
+            if (document.getElementById(id)) {
+                return;
             }
-            var s = setInterval(function() {
-                if (i < tap) {
-                    i++;
-                    dom.style.left = left - i * skip + '%';
-                } else {
-                    clearInterval(s);
-                    s = null;
-                }
-            }, ms);
-            setTimeout(e.bannerScroll.bind(null, dom, time, speed, num), time);
+            var load = document.createElement('div');
+            load.id = id;
+            load.style.textAlign = 'center';
+            load.style.padding = '10px';
+            load.style.backgroundColor = '#fff';
+            load.innerHTML = '<img src="'+_icon+'">&nbsp;&nbsp;' + _txt;
+            document.body.appendChild(load);
+            setTimeout(function() {
+                util.hideLoading();
+            }, 30000);
+        },
+        /**
+         * [hideLoading depend on showLoading()]
+         * @return {[type]} [description]
+         */
+        hideLoading: function() {
+            var load = document.getElementById('id_dataLoading');
+            if (load) {
+                document.body.removeChild(load);
+            }
+        },
+        /**
+         * [animateLeft move animate by js]
+         * @param  {[type]}   dom   [move dom]
+         * @param  {[type]}   left  [style left]
+         * @param  {[type]}   speed [move time by ms]
+         * @param  {Function} cb    [callback after animate finish]
+         * @return {[type]}         [description]
+         */
+        animateLeft: function(dom, left, speed, cb) {
+            if (util.lock.animateLeft_canMove) {
+                util.lock.animateLeft_canMove = false;
+                var _speed = speed || 100,
+                    _cb = cb || function() {},
+                    i = 0, //记录移动次数
+                    ms = 40, //移动频率,ms动一次
+                    domLeft = +dom.style.left.replace('px', '') || 0, //当前左侧坐标
+                    tap = Math.floor(_speed / ms), //一共动几次
+                    skip = (left - domLeft) / tap; //一次动的位移
+                var s = setInterval(function() { //模拟动画
+                    if (i < tap) {
+                        i++;
+                        dom.style.left = domLeft + i * skip + 'px';
+                    } else {
+                        dom.style.left = left + 'px'; //容错，保证最后是在正确位置上
+                        util.lock.animateLeft_canMove = true;
+                        _cb();
+                        clearInterval(s);
+                        s = null;
+                    }
+                }, ms);
+            }
+        },
+        /**
+         * [bannerMove touchmove banner depend on functon animateLeft()]
+         * @param  {[type]}   dom [the base dom]
+         * @param  {Function} cb  [callback pass in animateLeft()]
+         * @param  {[type]}   w   [width of a banner]
+         * @return {[type]}       [description]
+         */
+        bannerMove: function(dom, cb, w) {
+            var o = {
+                    w: w || document.body.offsetWidth, //一个banner宽度
+                    sX: 0, //最开始的触点x坐标
+                    domX: 0 //最开始dom的x坐标
+                },
+                _cb = cb || function() {}, //完成后的回调
+                handle = {
+                    move: function(e) {
+                        var baseX = e.changedTouches[0].clientX;
+                        dom.style.left = (o.domX + baseX - o.sX) + 'px';
+                    },
+                    end: function(e) {
+                        if (!util.lock.bannerMove_canTouch) {
+                            util.lock.bannerMove_canTouch = true;
+                            var finalLeft = o.sX > e.changedTouches[0].clientX ? (o.domX - o.w) : (o.domX + o.w);
+                            util.animateLeft(dom, finalLeft, 100, _cb);
+                        }
+                        dom.removeEventListener('touchmove', handle.move);
+                        dom.removeEventListener('touchend', handle.end);
+                    },
+                    start: function(e) {
+                        if (util.lock.bannerMove_canTouch && util.lock.animateLeft_canMove) {
+                            util.lock.bannerMove_canTouch = false;
+                            o.sX = e.changedTouches[0].clientX;
+                            o.domX = +dom.style.left.replace('px', '') || 0;
+                            dom.addEventListener('touchmove', handle.move);
+                            dom.addEventListener('touchend', handle.end);
+                        }
+                    }
+                };
+            dom.addEventListener('touchstart', handle.start);
         }
     };
     // 对Date的扩展，将 Date 转化为指定格式的String
