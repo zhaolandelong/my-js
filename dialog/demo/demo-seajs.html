@@ -4,14 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>seajs环境下demo</title>
+    <style>
+    pre {
+        background: #efefef;
+        border: 1px solid #ccc;
+        padding: 20px;
+    }
+    </style>
 </head>
 
 <body>
+    <h1>dialog-zldl seajs环境下demo</h1>
     <h2>说明：</h2>
     <p>
         1、引入dialog-zldl.js则已经在window下生成了ui对象，若想改变主对象名字可在引入的src中添加name参数，例
     </p>
-    <h6>&lt;script type="text/javascript" src="../dialog-zldl.js?name=myUI"&gt;&lt;/script&gt;</h6>
+    <pre>&lt;script type="text/javascript" src="../dialog-zldl.js?name=myUI"&gt;&lt;/script&gt;</pre>
     <p>这样全局对象就从ui变成了myUI</p>
     <p>
         2、做了模块兼容，可用amd，cmd的方式引用，若需要改变样式，需要调用ui.style('default')
@@ -42,7 +50,7 @@
             <button id="loading">test showLoading/hideLoading</button>
         </li>
     </ul>
-    <script src="http://apps.bdimg.com/libs/seajs/2.3.0/sea.js"></script>
+    <script src="../../lib/sea.js"></script>
     <script>
     seajs.config({
         alias: {

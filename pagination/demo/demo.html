@@ -27,9 +27,10 @@
 </head>
 
 <body>
-    <h1>pigination demo(require JQ)</h1>
+    <h1>pigination 原生环境下demo</h1>
     <p>引用步骤如下：</p>
-    <p>1、html中依次引入jquery、pagination-zldl.js文件</p>
+    <p>1、html中引入pagination-zldl.js文件，即在全局下生成pagination对象</p>
+    <pre>&lt;script src="../pagination-zldl.js"&gt;&lt;/script&gt;</pre>
     <p>2、html适当位置加入id为pagination的div</p>
     <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre>
     <p>3、js中调用pagination.init(maxpage, callback)</p>
@@ -47,7 +48,6 @@
         </div>
         <div id="pagination"></div>
     </div>
-    <script src="../../lib/jquery-1.11.3.min.js"></script>
     <script src="../pagination-zldl.js"></script>
     <script>
     var _pn = document.getElementById('pn'),
