@@ -5,6 +5,7 @@
  *scriptName-文件名，用来提取参数，参数可改变暴露的对象name（默认为ui）
  */
 (function() {
+    "use strict";
     var ui = {
         o: {
             "name": "ui", //引入js后，全局对象的名字，可在引入的jsurl后增加name参数更名

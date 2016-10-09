@@ -1,14 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>util-zldl 原生环境demo</title>
+    <meta charset="UTF-8">
+    <title>util-zldl 原生环境demo</title>
+    <style>
+    pre {
+        background: #efefef;
+        border: 1px solid #ccc;
+        padding: 20px;
+    }
+    
+    .note {
+        color: #f60;
+        padding: 0 10px;
+        font-weight: bold;
+    }
+    
+    li {
+        margin: 10px 0;
+    }
+    </style>
 </head>
+
 <body>
-	<h1>util-zldl 原生环境demo</h1>
-	<script src="../util-zldl.js"></script>
-	<script>
-		
-	</script>
+    <h1>util-zldl 原生环境demo(适合移动端)</h1>
+    <ol>
+        <li>
+            Date.prototype.Format-给Date对象增加了一个方法，根据输入，输出各种格式的时间
+            <pre>var a = new Date(111111);<br><br>a.Format("yyyy-MM-dd hh:mm:ss.S") => <span id="ymdhms"></span><br><br>a.Format("yyyy-M-d h:m:s.S") => <span id="ymdhms2"></span><br><br></pre>
+        </li>
+        <li>
+            isAndroid-返回当前设备是否为android
+            <pre>util.isAndroid	//true-是	false-否</pre>
+        </li>
+        <li>
+            urlParam(param)-获取url中的变量(将此部分?test=IAmUrlTest添加到到当前url之后，回车)
+            <pre>util.urlParam('test') => IAmUrlTest</pre> 获取的
+            <span id="urlParamP" class="note"></span>变量的值为<span id="urlParamV" class="note"></span>
+        </li>
+        <li>
+            getCookie(name)-获取cookie中的变量值
+            <pre>util.getCookie('test') => cookie中test的值</pre>
+        </li>
+        <li>
+            ajax(option).headers(option).before(callback).get|post(url).always(callback).suc(callback).err(callback)-链式调用的ajax(默认为json格式，不是promise，多个回调异步执行)，详情见源代码
+            <pre>util.ajax().get(url).suc(function(res){ //成功回调1}).suc(function(res){ //成功回调2}).err(function(){ //失败回调});</pre>
+        </li>
+        <li>
+            add(a,b)-两数相加，防止精度丢失
+            <pre>0.1+0.2 => 0.30000000000000004;<br><br>util.add(0.1,0.2) => 0.3;</pre>
+        </li>
+        <li>
+            scrollIntoView(dom)-(移动端)传入的dom自动移动到可视区域，如果是IOS直接滚，如果是android，已唤出输入法就直接滚否则要监听onresize事件,注意IE不支持outerHeight
+        </li>
+        <li>
+            fullPath()-获取url全绝对路径，即最后一个/之前的所有
+            <pre>util.fullPath() => <span id="fullpath"></span></pre>
+        </li>
+        <li>
+            showLoading(txt,iconUrl)/hideLoading()-(移动端)在body最下面加一个loading动画，如无反应，30s后自动消失；点击按钮看效果
+            <pre>btn.onclick = util.showLoading.bind(null,'效果看这里！！！！','');</pre>
+            <button onclick="util.showLoading('效果看这里！！！！')">showLoading</button>
+            <button onclick="util.hideLoading()">hideLoading</button>
+        </li>
+        <li>
+            animateLeft(dom, left, speed, cb)-js模拟左滑动动画（dom-主dom，left-终点坐标，speed-多久移动完单位ms，cb-移动完执行的回调，可省略），点击查看效果
+            <pre>util.animateLeft(dom,0,1000);</pre>
+            <button onclick="util.animateLeft(document.getElementById('box'), 0, 1000)">move1</button>
+            <div style="position:relative;width:550px;height: 50px;border:1px solid #000;">
+                <div id="box" style="width:50px;height:50px;background:#666;position:absolute;left:500px;"></div>
+            </div>
+            <pre>util.animateLeft(dom,500,500);</pre>
+            <button onclick="util.animateLeft(document.getElementById('box2'), 500, 500);">move2</button>
+            <div style="position:relative;width:550px;height: 50px;border:1px solid #000;">
+                <div id="box2" style="width:50px;height:50px;background:#666;position:absolute;left:0;"></div>
+            </div>
+        </li>
+    </ol>
+    <script src="../util-zldl.js"></script>
+    <script>
+    ! function() {
+        var param = 'test';
+        document.getElementById('urlParamP').innerHTML = param;
+        document.getElementById('urlParamV').innerHTML = util.urlParam(param);
+        document.getElementById('fullpath').innerHTML = util.fullPath();
+        var a = new Date(111111);
+        document.getElementById('ymdhms').innerHTML = a.Format("yyyy-MM-dd hh:mm:ss.S");
+        document.getElementById('ymdhms2').innerHTML = a.Format("yyyy-M-d h:m:s.S");
+    }()
+    </script>
 </body>
+
 </html>

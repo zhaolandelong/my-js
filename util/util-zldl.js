@@ -2,6 +2,7 @@
  * Created by zhaoldl on 2016/3/17.工具类
  */
 ! function() {
+    "use strict";
     var util = {
         lock: { //各种方法的锁
             animateLeft_canMove: true,
@@ -31,48 +32,6 @@
             var arr = [],
                 reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
             return (arr = document.cookie.match(reg)) ? arr[2] : null;
-        },
-        /**
-         * [ajaxForJson 简单包装的json ajax]
-         * @param  {[type]} url     [ajax url]
-         * @param  {[type]} type    ['GET','POST',...]
-         * @param  {[type]} data    [jsondata]
-         * @param  {[type]} succFun [successed function]
-         * @param  {[type]} failFun [failed function]
-         * @param  {[type]} async  [true false]
-         * @return {[type]}         [description]
-         */
-        ajaxForJson: function(url, type, data, succFun, failFun, async) {
-            //创建XMLHttpRequest对象
-            var xhr,
-                _async = typeof(async) == 'undefined' || async;
-            try {
-                xhr = new XMLHttpRequest(); //直接创建
-            } catch (e) {
-                try {
-                    xhr = new ActiveXObject("Msxml2.XMLHTTP"); //IE高版本创建XMLHTTP
-                } catch (e) {
-                    xhr = new ActiveXObject("Microsoft.XMLHTTP"); //IE低版本创建XMLHTTP
-                }
-            }
-            xhr.open(type, url, _async);
-            //指定参数为json
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(data);
-            //指定响应函数
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    var jsonData = JSON.parse(xhr.responseText)
-                    var _status = xhr.status;
-                    if (_status >= 200 && _status < 300 || _status === 304) {
-                        //成功
-                        succFun(jsonData);
-                    } else {
-                        //失败
-                        failFun(jsonData);
-                    }
-                }
-            };
         },
         /**
          * [ajax 可链式调用的ajax，功能较完善]
@@ -366,5 +325,5 @@
     };
     "object" == typeof exports ? module.exports = util : "function" == typeof define && (define.cmd || define.amd) ? define(function() {
         return util
-    }) : this.util = util;
+    }) : window.util = util;
 }()
