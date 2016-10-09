@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>pigination demo</title>
+    <style>
+    pre {
+        background: #efefef;
+        border: 1px solid #ccc;
+        padding: 20px;
+    }
+    
+    .show {
+        text-align: center;
+    }
+    
+    .show>div {
+        margin: 10px 0;
+    }
+    
+    .num {
+        color: #f60;
+        font-weight: bold;
+    }
+    </style>
 </head>
+
 <body>
-    <h1>pigination demo</h1>
-    <p></p>
+    <h1>pigination demo(require JQ)</h1>
+    <p>引用步骤如下：</p>
+    <p>1、html中依次引入jquery、pagination-zldl.js文件</p>
+    <p>2、html适当位置加入id为pagination的div</p>
+    <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre>
+    <p>3、js中调用pagination.init(maxpage, callback)</p>
+    <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
+    <pre>eg: pagination.init( 10 , function(n){ console.log('page NO. is' + n);} );</pre>
+    <div class="show">
+        <h2>展示区</h2>
+        <div>
+            请输入总页码，并确定：
+            <input id="input" type="text" value="10">
+            <button id="ensure">确定</button>
+        </div>
+        <div>
+            共<span id="max" class="num"></span>页，当前是第<span id="pn" class="num">1</span>页
+        </div>
+        <div id="pagination"></div>
+    </div>
+    <script src="../../lib/jquery-1.11.3.min.js"></script>
+    <script src="../pagination-zldl.js"></script>
+    <script>
+    var _pn = document.getElementById('pn'),
+        _max = document.getElementById('max'),
+        _input = document.getElementById('input'),
+        _ensure = document.getElementById('ensure'),
+        handle = function() {
+            var maxNo = +_input.value
+            _max.innerHTML = maxNo;
+            pagination.init(maxNo, function(n) {
+                _pn.innerHTML = n;
+            });
+        };
+    ensure.onclick = handle;
+    handle();
+    </script>
 </body>
+
 </html>

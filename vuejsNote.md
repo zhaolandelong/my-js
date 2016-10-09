@@ -28,3 +28,6 @@ template:&lt;div>我是头&lt;/div>&lt;slot>&lt;/slot>&lt;div>我是尾&lt;/div>
 >我是尾  
 
 很有用哦
+
+手机qq监听hashchange事件只能用window.addEventListener("hashchange", rend.router, false);
+window.onhashchange = function 不好使

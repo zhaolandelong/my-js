@@ -3,6 +3,10 @@
  */
 ! function() {
     var util = {
+        lock: { //各种方法的锁
+            animateLeft_canMove: true,
+            bannerMove_canTouch: true
+        },
         /**
          * [isAndroid 是否是安卓 true-是 false-不是]
          * @type {Boolean}
