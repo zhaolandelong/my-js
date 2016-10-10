@@ -37,7 +37,7 @@
         margin: 0;
         padding: 0;
         list-style-type: none;
-        width: 100px;
+        width: 200px;
         height: 100px;
         display: inline-block;
         font-size: 30px;
@@ -139,24 +139,47 @@ var bannerScroll = function(dom, time, speed, num) {
     });
 };
 bannerScroll(document.getElementById('bannerMove'), 2000, 500, 3);</pre>
-            <div style="position:relative;width:100px;height:100px;border:1px solid #666;overflow:hidden;">
+            <div style="position:relative;width:200px;height:100px;border:1px solid #666;overflow:hidden;">
                 <ul id="bannerMove" style="position:absolute;white-space:nowrap;">
-                    <li style="background:#f00;">auto1</li>
-                    <li style="background:#0f0;">auto2</li>
-                    <li style="background:#00f;">auto3</li>
-                    <li style="background:#f00;">auto1</li>
+                    <li style="background:#f00;">banner1</li>
+                    <li style="background:#0f0;">banner2</li>
+                    <li style="background:#00f;">banner3</li>
+                    <li style="background:#f00;">banner1</li>
                 </ul>
             </div>
         </li>
         <li>
-            bannerMove(dom, cb, w)-(移动端)滑动触发banner滚动，依赖util.animateLeft()
-            <div style="position:relative;width:100px;height:100px;border:1px solid #666;overflow:hidden;">
-                <ul id="touchMove" style="position:absolute;white-space:nowrap;left:-100px;">
+            bannerMove(dom, cb, w)-(移动端only)滑动触发banner滚动，依赖util.animateLeft()
+            <pre>//为实现无限滚动，前后分别加了3和1，并在js里做处理
+util.bannerMove(document.getElementById('touchMove'), function() {
+    var dom = document.getElementById('touchMove'),
+        w = 100,
+        left = +dom.style.left.replace('px', '') || 0,
+        n = dom.children.length, //共有几个banner（包括前后额外两个做效果的）
+        i = Math.ceil(Math.abs(left) / w); //划完后当前是第几个
+    if (i == n - 1) { //右滑到最后了，重定位
+        dom.style.left = -w + 'px';
+    } else if (i == 0) { //左滑到第一个了，重定位
+        dom.style.left = -w * (n - 2) + 'px';
+    }
+}, 100);</pre> 滑动试试（移动端）
+            <div style="position:relative;width:200px;height:100px;border:1px solid #666;overflow:hidden;">
+                <ul id="touchMove" style="position:absolute;white-space:nowrap;left:-200px;">
                     <li style="background:#00f;">touch3</li>
                     <li style="background:#f00;">touch1</li>
                     <li style="background:#0f0;">touch2</li>
                     <li style="background:#00f;">touch3</li>
                     <li style="background:#f00;">touch1</li>
+                </ul>
+            </div>
+            轮播滑动混合
+            <div style="position:relative;width:200px;height:100px;border:1px solid #666;overflow:hidden;">
+                <ul id="mixMove" style="position:absolute;white-space:nowrap;left:-200px;">
+                    <li style="background:#00f;">mix3</li>
+                    <li style="background:#f00;">mix1</li>
+                    <li style="background:#0f0;">mix2</li>
+                    <li style="background:#00f;">mix3</li>
+                    <li style="background:#f00;">mix1</li>
                 </ul>
             </div>
         </li>
@@ -186,7 +209,7 @@ bannerScroll(document.getElementById('bannerMove'), 2000, 500, 3);</pre>
             }
         };
         var bannerScroll = function(dom, time, speed, num) {
-            var w = 100,
+            var w = 200,
                 left = +dom.style.left.replace('px', '') || 0,
                 i = Math.ceil(Math.abs(left) / w); //当前是第几个
             var finalLeft = -(i + 1) * w;
@@ -197,19 +220,44 @@ bannerScroll(document.getElementById('bannerMove'), 2000, 500, 3);</pre>
                 }
             });
         };
-        bannerScroll(document.getElementById('bannerMove'), 2000, 500, 3);
+        bannerScroll(document.getElementById('bannerMove'), 1800, 500, 3);
         util.bannerMove(document.getElementById('touchMove'), function() {
             var dom = document.getElementById('touchMove'),
-                w = 100,
+                w = 200,
                 left = +dom.style.left.replace('px', '') || 0,
                 n = dom.children.length, //共有几个banner（包括前后额外两个做效果的）
                 i = Math.ceil(Math.abs(left) / w); //划完后当前是第几个
-            if (i == n - 1) { //右滑到最后了，重定位
+            if (i >= n - 1) { //右滑到最后了，重定位
                 dom.style.left = -w + 'px';
-            } else if (i == 0) { //左滑到第一个了，重定位
+            } else if (i <= 0) { //左滑到第一个了，重定位
                 dom.style.left = -w * (n - 2) + 'px';
             }
-        }, 100);
+        }, 200);
+        util.bannerMove(document.getElementById('mixMove'), function() {
+            var dom = document.getElementById('mixMove'),
+                w = 200,
+                left = +dom.style.left.replace('px', '') || 0,
+                n = dom.children.length, //共有几个banner（包括前后额外两个做效果的）
+                i = Math.ceil(Math.abs(left) / w); //划完后当前是第几个
+            if (i >= n - 1) { //右滑到最后了，重定位
+                dom.style.left = -w + 'px';
+            } else if (i <= 0) { //左滑到第一个了，重定位
+                dom.style.left = -w * (n - 2) + 'px';
+            }
+        }, 200);
+        var mixScroll = function(dom, time, speed, num) {
+            var w = 200,
+                left = +dom.style.left.replace('px', '') || 0,
+                i = Math.ceil(Math.abs(left) / w); //当前是第几个
+            var finalLeft = -(i + 1) * w;
+            setTimeout(mixScroll.bind(null, dom, time, speed, num), time);
+            util.animateLeft(dom, finalLeft, speed, function() {
+                if (i >= num - 1) { //到最后了
+                    dom.style.left = 0;
+                }
+            });
+        };
+        mixScroll(document.getElementById('mixMove'), 2000, 500, 3)
     }()
     </script>
 </body>

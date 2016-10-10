@@ -5,8 +5,8 @@
     "use strict";
     var util = {
         lock: { //各种方法的锁
-            animateLeft_canMove: true,
-            bannerMove_canTouch: true
+            animateLeft_notMove: [], //保存正在执行animateLeft的dom id
+            bannerMove_notTouch: [] //保存被touch的dom id
         },
         /**
          * [isAndroid 是否是安卓 true-是 false-不是]
@@ -199,7 +199,7 @@
          * @param  {[type]} icon [description]
          * @return {[type]}      [description]
          */
-        showLoading: function(txt,icon) {
+        showLoading: function(txt, icon) {
             var id = 'id_dataLoading',
                 _txt = txt || '加载中…',
                 _icon = icon || 'https://o9xctjw8r.qnssl.com/loading2.gif';
@@ -211,7 +211,7 @@
             load.style.textAlign = 'center';
             load.style.padding = '10px';
             load.style.backgroundColor = '#fff';
-            load.innerHTML = '<img src="'+_icon+'">&nbsp;&nbsp;' + _txt;
+            load.innerHTML = '<img src="' + _icon + '">&nbsp;&nbsp;' + _txt;
             document.body.appendChild(load);
             setTimeout(function() {
                 util.hideLoading();
@@ -236,8 +236,16 @@
          * @return {[type]}         [description]
          */
         animateLeft: function(dom, left, speed, cb) {
-            if (util.lock.animateLeft_canMove) {
-                util.lock.animateLeft_canMove = false;
+            var id = dom.id;
+            if (typeof(id) == 'undefined' || id == '') {
+                console.log('dom in animateLeft() must has \'id\'');
+                return;
+            }
+            var canMove = util.lock.animateLeft_notMove,
+                mIndex = canMove.indexOf(id),
+                tIndex = util.lock.bannerMove_notTouch.indexOf(id);
+            if (mIndex == -1 && tIndex == -1) {
+                canMove.push(id);
                 var _speed = speed || 100,
                     _cb = cb || function() {},
                     i = 0, //记录移动次数
@@ -251,7 +259,7 @@
                         dom.style.left = domLeft + i * skip + 'px';
                     } else {
                         dom.style.left = left + 'px'; //容错，保证最后是在正确位置上
-                        util.lock.animateLeft_canMove = true;
+                        canMove.splice(mIndex, 1);
                         _cb();
                         clearInterval(s);
                         s = null;
@@ -273,14 +281,19 @@
                     domX: 0 //最开始dom的x坐标
                 },
                 _cb = cb || function() {}, //完成后的回调
+                id = dom.id,
+                notTouch = util.lock.bannerMove_notTouch,
                 handle = {
                     move: function(e) {
+                        e.preventDefault();
                         var baseX = e.changedTouches[0].clientX;
                         dom.style.left = (o.domX + baseX - o.sX) + 'px';
                     },
                     end: function(e) {
-                        if (!util.lock.bannerMove_canTouch) {
-                            util.lock.bannerMove_canTouch = true;
+                        e.preventDefault();
+                        var index = notTouch.indexOf(id);
+                        if (index != -1) {
+                            notTouch.splice(index, 1);
                             var finalLeft = o.sX > e.changedTouches[0].clientX ? (o.domX - o.w) : (o.domX + o.w);
                             util.animateLeft(dom, finalLeft, 100, _cb);
                         }
@@ -288,8 +301,9 @@
                         dom.removeEventListener('touchend', handle.end);
                     },
                     start: function(e) {
-                        if (util.lock.bannerMove_canTouch && util.lock.animateLeft_canMove) {
-                            util.lock.bannerMove_canTouch = false;
+                        e.preventDefault();
+                        if (notTouch.indexOf(id) == -1 && util.lock.animateLeft_notMove.indexOf(dom.id) == -1) {
+                            notTouch.push(id);
                             o.sX = e.changedTouches[0].clientX;
                             o.domX = +dom.style.left.replace('px', '') || 0;
                             dom.addEventListener('touchmove', handle.move);
