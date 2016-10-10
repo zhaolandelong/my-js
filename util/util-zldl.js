@@ -241,7 +241,7 @@
                 var _speed = speed || 100,
                     _cb = cb || function() {},
                     i = 0, //记录移动次数
-                    ms = 40, //移动频率,ms动一次
+                    ms = 20, //移动频率,ms动一次
                     domLeft = +dom.style.left.replace('px', '') || 0, //当前左侧坐标
                     tap = Math.floor(_speed / ms), //一共动几次
                     skip = (left - domLeft) / tap; //一次动的位移
