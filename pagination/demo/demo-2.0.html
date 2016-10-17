@@ -48,8 +48,9 @@
             共<span id="max" class="num"></span>页，当前是第<span id="pn" class="num">1</span>页
         </div>
         <div id="pagination"></div>
+        <div id="id2"></div>
     </div>
-    <script src="../pagination-zldl.js"></script>
+    <script src="../pagination-zldl-2.0.js"></script>
     <script>
     var _pn = document.getElementById('pn'),
         _max = document.getElementById('max'),
@@ -58,9 +59,19 @@
         handle = function() {
             var maxNo = +_input.value
             _max.innerHTML = maxNo;
-            pagination.init(maxNo, function(n) {
+            var a = new Pagination('pagination');
+            var b = new Pagination('id2');
+            a.init(maxNo, function(n) {
                 _pn.innerHTML = n;
             });
+            b.init('33', function(n) {
+                console.log('this is id2' + n);
+            });
+            // console.log(a.test().test().test());
+            // console.log(b.showId());
+            /*pagination.init(maxNo, function(n) {
+                _pn.innerHTML = n;
+            });*/
         };
     ensure.onclick = handle;
     handle();

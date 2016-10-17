@@ -1,0 +1,25 @@
+{
+  "name": "my-js",
+  "version": "1.0.0",
+  "description": "自己整理和手写的一些常用功能，用法：\r >1、直接引入当前js文件，可在全局window下生成一个util对象，用util.xxx来调用各方法，如util.urlParam('id')，获取url中id参数  \r >2、require引入当前js文件，如var aaa=require('zldl-js');aaa.urlParam('id')，获取url中id参数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaolandelong/my-js.git"
+  },
+  "author": "zldl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhaolandelong/my-js/issues"
+  },
+  "homepage": "https://github.com/zhaolandelong/my-js#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.1",
+    "gulp-uglify": "^2.0.0",
+    "jshint": "^2.9.3"
+  }
+}
