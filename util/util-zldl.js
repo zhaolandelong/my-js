@@ -308,6 +308,7 @@
                             o.domX = +dom.style.left.replace('px', '') || 0;
                             dom.addEventListener('touchmove', handle.move);
                             dom.addEventListener('touchend', handle.end);
+
                         }
                     }
                 };

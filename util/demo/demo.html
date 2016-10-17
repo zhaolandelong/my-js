@@ -208,12 +208,13 @@ util.bannerMove(document.getElementById('touchMove'), function() {
                 })
             }
         };
+        //自动轮播
         var bannerScroll = function(dom, time, speed, num) {
             var w = 200,
                 left = +dom.style.left.replace('px', '') || 0,
                 i = Math.ceil(Math.abs(left) / w); //当前是第几个
             var finalLeft = -(i + 1) * w;
-            setTimeout(bannerScroll.bind(null, dom, time, speed, num), time);
+            setTimeout(bannerScroll.bind(null,dom, time, speed, num), time);
             util.animateLeft(dom, finalLeft, speed, function() {
                 if (i == num - 1) { //到最后了
                     dom.style.left = 0;
@@ -221,6 +222,7 @@ util.bannerMove(document.getElementById('touchMove'), function() {
             });
         };
         bannerScroll(document.getElementById('bannerMove'), 1800, 500, 3);
+        //滑动
         util.bannerMove(document.getElementById('touchMove'), function() {
             var dom = document.getElementById('touchMove'),
                 w = 200,
@@ -233,6 +235,7 @@ util.bannerMove(document.getElementById('touchMove'), function() {
                 dom.style.left = -w * (n - 2) + 'px';
             }
         }, 200);
+        //混合轮播
         util.bannerMove(document.getElementById('mixMove'), function() {
             var dom = document.getElementById('mixMove'),
                 w = 200,
@@ -250,7 +253,7 @@ util.bannerMove(document.getElementById('touchMove'), function() {
                 left = +dom.style.left.replace('px', '') || 0,
                 i = Math.ceil(Math.abs(left) / w); //当前是第几个
             var finalLeft = -(i + 1) * w;
-            setTimeout(mixScroll.bind(null, dom, time, speed, num), time);
+            setTimeout(mixScroll.bind(null,dom, time, speed, num), time);
             util.animateLeft(dom, finalLeft, speed, function() {
                 if (i >= num - 1) { //到最后了
                     dom.style.left = 0;
