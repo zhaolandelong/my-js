@@ -50,7 +50,7 @@
         <div id="pagination"></div>
         <div id="id2"></div>
     </div>
-    <script src="../pagination-zldl-2.0.js"></script>
+    <script src="../pagination-zldl-2.0.min.js"></script>
     <script>
     var _pn = document.getElementById('pn'),
         _max = document.getElementById('max'),
@@ -64,7 +64,7 @@
             a.init(maxNo, function(n) {
                 _pn.innerHTML = n;
             });
-            b.init('33', function(n) {
+            b.init(33, function(n) {
                 console.log('this is id2' + n);
             });
             // console.log(a.test().test().test());
