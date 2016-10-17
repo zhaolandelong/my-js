@@ -30,51 +30,65 @@
 <body>
     <h1>pigination 原生环境下demo</h1>
     <p>引用步骤如下：</p>
-    <p>1、html中引入pagination-zldl.js文件，即在全局下生成pagination对象</p>
+    <p>1、html中引入pagination-zldl.js文件，即在全局下生成Pagination构造函数</p>
     <pre>&lt;script src="../pagination-zldl.js"&gt;&lt;/script&gt;</pre>
-    <p>2、html适当位置加入id为pagination的div</p>
+    <p>2、实例化（需要几个就实例化几个）&lt;id&gt; </p>
+    <pre>var pagination = new Pagination('pagination')</pre>
+    <p>3、html适当位置加入id为pagination的div</p>
     <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre>
-    <p>3、js中调用pagination.init(maxpage, callback)</p>
+    <p>4、js中调用pagination.init(maxpage, callback)</p>
     <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
     <pre>eg: pagination.init( 10 , function(n){ console.log('page NO. is' + n);} );</pre>
     <div class="show">
-        <h2>展示区</h2>
+        <h2>展示区1</h2>
         <div>
             请输入总页码，并确定：
-            <input id="input" type="text" value="10">
-            <button id="ensure">确定</button>
+            <input id="input1" type="text" value="5">
+            <button id="ensure1">确定</button>
         </div>
         <div>
-            共<span id="max" class="num"></span>页，当前是第<span id="pn" class="num">1</span>页
+            共<span id="max1" class="num"></span>页，当前是第<span id="pn1" class="num">1</span>页
         </div>
-        <div id="pagination"></div>
-        <div id="id2"></div>
+        <div id="pagination1"></div>
+        <h2>展示区2</h2>
+        <div>
+            请输入总页码，并确定：
+            <input id="input2" type="text" value="10">
+            <button id="ensure2">确定</button>
+        </div>
+        <div>
+            共<span id="max2" class="num"></span>页，当前是第<span id="pn2" class="num">1</span>页
+        </div>
+        <div id="pagination2"></div>
     </div>
-    <script src="../pagination-zldl-2.0.min.js"></script>
+    <script src="../min/pagination-zldl-2.0.min.js"></script>
     <script>
-    var _pn = document.getElementById('pn'),
-        _max = document.getElementById('max'),
-        _input = document.getElementById('input'),
-        _ensure = document.getElementById('ensure'),
-        handle = function() {
-            var maxNo = +_input.value
-            _max.innerHTML = maxNo;
-            var a = new Pagination('pagination');
-            var b = new Pagination('id2');
-            a.init(maxNo, function(n) {
-                _pn.innerHTML = n;
+    var _pn1 = document.getElementById('pn1'),
+        _pn2 = document.getElementById('pn2'),
+        _max1 = document.getElementById('max1'),
+        _max2 = document.getElementById('max2'),
+        _input1 = document.getElementById('input1'),
+        _input2 = document.getElementById('input2'),
+        _ensure1 = document.getElementById('ensure1'),
+        _ensure2 = document.getElementById('ensure2'),
+        handle1 = function() {
+            var maxNo1 = _max1.innerHTML = +_input1.value,
+            pagination1 = new Pagination('pagination1');
+            pagination1.init(maxNo1, function(n) {
+                _pn1.innerHTML = n;
             });
-            b.init(33, function(n) {
-                console.log('this is id2' + n);
+        },
+        handle2 = function() {
+            var maxNo2 = _max2.innerHTML = +_input2.value
+            var pagination2 = new Pagination('pagination2');
+            pagination2.init(maxNo2, function(n) {
+                _pn2.innerHTML = n;
             });
-            // console.log(a.test().test().test());
-            // console.log(b.showId());
-            /*pagination.init(maxNo, function(n) {
-                _pn.innerHTML = n;
-            });*/
         };
-    ensure.onclick = handle;
-    handle();
+    ensure1.onclick = handle1;
+    ensure2.onclick = handle2;
+    handle1();
+    handle2();
     </script>
 </body>
 
