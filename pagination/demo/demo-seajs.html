@@ -30,59 +30,90 @@
 <body>
     <h1>pigination seajs环境下demo</h1>
     <p>引用步骤如下：</p>
-    <p>1、html中引入sea.js文件</p>
-    <pre>&lt;script src="../../lib/sea.js"&gt;&lt;/script&gt;</pre>
-    <p>2、seajs设置中引入pagination-zldl.js</p>
-    <pre>
+    <ol>
+        <li>
+            <p>html中引入sea.js文件</p>
+            <pre>&lt;script src="../../lib/sea.js"&gt;&lt;/script&gt;</pre></li>
+        <li>
+            <p>seajs设置中引入pagination-zldl.js</p>
+            <pre>
     seajs.config({
         alias: {
-            pagination: '../pagination-zldl.js'
+            Pagination: '../pagination-zldl.js'
         }
-    });</pre>
-    <p>3、html适当位置加入id为pagination的div</p>
-    <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre>
-    <p>4、js中require('pagination')或use中声明，并调用pagination.init(maxpage, callback)</p>
-    <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
-    <pre>
-    seajs.use('pagination', function(pagination) {
+    });</pre></li>
+        <li>
+            <p>html适当位置加入div，id要与下一步实例化中参数对应</p>
+            <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre></li>
+        <li>
+            <p>js中require('Pagination')或use中声明，并实例化(可实例化多个)new Pagination(id)-id对应html中的元素id</p>
+            <p>之后再适当位置调用实例的init(maxpage, callback)方法</p>
+            <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
+            <pre>
+    seajs.use('Pagination', function(Pagination) {
+        var pagination = new Pagination('pagination');
         pagination.init(10,function(n){
             console.log(n);
             //code here
         });
-    });</pre>
+    });</pre></li>
+    </ol>
     <div class="show">
-        <h2>展示区</h2>
+        <h2>展示区-实例pagination1</h2>
         <div>
             请输入总页码，并确定：
-            <input id="input" type="text" value="10">
-            <button id="ensure">确定</button>
+            <input id="input1" type="text" value="5">
+            <button id="ensure1" onclick="handle1()">确定</button>
         </div>
         <div>
-            共<span id="max" class="num"></span>页，当前是第<span id="pn" class="num">1</span>页
+            共<span id="max1" class="num"></span>页，当前是第<span id="pn1" class="num">1</span>页
         </div>
-        <div id="pagination"></div>
+        <div id="pagination1"></div>
+        <h2>展示区-实例pagination2</h2>
+        <div>
+            请输入总页码，并确定：
+            <input id="input2" type="text" value="10">
+            <button id="ensure2" onclick="handle2()">确定</button>
+        </div>
+        <div>
+            共<span id="max2" class="num"></span>页，当前是第<span id="pn2" class="num">1</span>页
+        </div>
+        <div id="pagination2"></div>
     </div>
     <script src="../../lib/sea.js"></script>
     <script>
     seajs.config({
         alias: {
-            pagination: '../pagination-zldl-1.0.js'
+            Pagination: '../min/pagination-zldl-2.0.min.js'
         }
     });
-    seajs.use('pagination', function(pagination) {
-        var _pn = document.getElementById('pn'),
-            _max = document.getElementById('max'),
-            _input = document.getElementById('input'),
-            _ensure = document.getElementById('ensure'),
-            handle = function() {
-                var maxNo = +_input.value
-                _max.innerHTML = maxNo;
-                pagination.init(maxNo, function(n) {
-                    _pn.innerHTML = n;
+    seajs.use('Pagination', function(Pagination) {
+        var _pn1 = document.getElementById('pn1'),
+            _pn2 = document.getElementById('pn2'),
+            _max1 = document.getElementById('max1'),
+            _max2 = document.getElementById('max2'),
+            _input1 = document.getElementById('input1'),
+            _input2 = document.getElementById('input2'),
+            _ensure1 = document.getElementById('ensure1'),
+            _ensure2 = document.getElementById('ensure2'),
+            handle1 = function() {
+                var maxNo1 = _max1.innerHTML = +_input1.value,
+                    pagination1 = new Pagination('pagination1');
+                pagination1.init(maxNo1, function(n) {
+                    _pn1.innerHTML = n;
+                });
+            },
+            handle2 = function() {
+                var maxNo2 = _max2.innerHTML = +_input2.value,
+                    pagination2 = new Pagination('pagination2');
+                pagination2.init(maxNo2, function(n) {
+                    _pn2.innerHTML = n;
                 });
             };
-        ensure.onclick = handle;
-        handle();
+        handle1();
+        handle2();
+        _ensure1.onclick = handle1;
+        _ensure2.onclick = handle2;
     });
     </script>
 </body>
