@@ -24,6 +24,15 @@
             return r != null ? decodeURIComponent(r[2]) : null;
         },
         /**
+         * 倒计时用
+         */
+        countDown: function(t) {
+            var h = Math.floor(t / 3600),
+                m = Math.floor(t / 60) - h * 60,
+                s = t - h * 3600 - m * 60;
+            return h + ':' + (m < 10 ? ('0' + m) : m) + ':' + (s < 10 ? ('0' + s) : s)
+        },
+        /**
          * [getCookie 获取cookie]
          * @param  {[type]} name [要获取的cookie key]
          * @return {[type]}      [description]
