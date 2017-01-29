@@ -1,1 +1,159 @@
-!function(){"use strict";var e=function(e,n,a,t){this.id=e,this.prevTxt=a||"上一页",this.nextTxt=t||"下一页",this.maxnum=n||7,this.num=1,this.mid=Math.round(this.maxnum/2),this.maxpage=1,this.current=1,this.doms={wrap:document.getElementById(e),dPre:null,dNex:null,dLdot:null,dRdot:null,dPage:null},this.callback=function(e){console.log("turn to page",e)}};e.prototype={pageTo:function(e){this.callback(e),this.rend(e)},rend:function(e){for(var n,i,d=this.num,s=this.maxpage,o=this.mid,l=this.doms,r=l.dPage,c=0,p=d;c<p;c++){switch(n=r[c],c){case 0:i=1;break;case p-1:i=s;break;default:i=e<=o?c+1:e>=s-o+1?s-d+c+1:e-o+c+1,n.innerHTML=i}i==e?a(n,"disabled"):t(n,"disabled")}1==e?a(l.dPre,"disabled"):t(l.dPre,"disabled"),e==s?a(l.dNex,"disabled"):t(l.dNex,"disabled"),s>d&&(2==r[1].innerHTML?a(l.dLdot,"disabled"):t(l.dLdot,"disabled"),r[d-2].innerHTML==s-1?a(l.dRdot,"disabled"):t(l.dRdot,"disabled"))},init:function(e,n){var a=this,t=a.doms,i=t.wrap;if(!i)return void console.warn("如要添加分页，请在html中加入id为 "+a.id+" 的div");console.log("pagination baseon "+a.id+" initialization success!");var d=document.createElement("div");if(d.innerHTML="x<style>.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.pagination-zldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.pagination-zldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.pagination-zldl>.next.disabled,.pagination-zldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.pagination-zldl>.ldot,.pagination-zldl>.rdot{border:none;background:0 0}.pagination-zldl>.ldot.disabled,.pagination-zldl>.rdot.disabled{display:none}</style>",document.getElementsByTagName("head")[0].appendChild(d.lastChild),i.className="pagination-zldl","number"!=typeof e)return void console.warn("the 1st argument in init must be a number!");if(e<=1)return void(i.style.display="none");if(i.style.display="block",a.maxpage=e,!n||"function"!=typeof n)return void console.warn("the 2nd argument in init must be a function!");a.callback=n;for(var s,o=a.num=a.maxnum>e?e:a.maxnum,l=['<span class="prev disabled">'+a.prevTxt+'</span><span class="page disabled">1</span><span class="ldot disabled"> … </span>'],r=1;r<o;r++){if(s=r+1,r==o-1){var c=" disabled";e>o&&(s=e,c=""),l.push('<span class="rdot'+c+'"> … </span>')}l.push('<span class="page">'+s+"</span>")}l.push('<span class="next">'+a.nextTxt+"</span>"),i.innerHTML=l.join(""),t.dPre=i.querySelector(".prev"),t.dNex=i.querySelector(".next"),t.dLdot=i.querySelector(".ldot"),t.dRdot=i.querySelector(".rdot"),t.dPage=i.querySelectorAll(".page"),i.onclick=function(e){var e=e||window.event,n=e.target||e.srcElement;switch(n.className){case"page":a.current!=+n.innerHTML&&a.pageTo(a.current=+n.innerHTML);break;case"prev":a.current>1&&a.pageTo(--a.current);break;case"next":a.current<a.maxpage&&a.pageTo(++a.current)}}}};var n=function(e,n){return 1===e.nodeType&&(" "+e.className+" ").replace(/\s+/g," ").indexOf(" "+n+" ")!==-1},a=function(e,a){n(e,a)||(e.className=e.className+" "+a)},t=function(e,a){n(e,a)&&(e.className=(" "+e.className).replace(" "+a,"").replace(/(^\s*)/g,""))};"object"==typeof exports?module.exports=e:"function"==typeof define&&(define.cmd||define.amd)?define(function(){return e}):window.Pagination=e}();
+/**
+ * 2017.01.31 by zhaolandelong
+ * zhaolandelong@163.com
+ * https://github.com/zhaolandelong
+ * friendly to ie8+ and totaly native
+ */
+! function() {
+  "use strict";
+
+  var Pagination = function(id, num, prevTxt, nextTxt) {
+    this.id = id; //主id
+    this.prevTxt = prevTxt || "上一页";
+    this.nextTxt = nextTxt || "下一页";
+    this.maxnum = num || 7; //最大item数
+    this.num = 1; //当n很小时的item数
+    this.mid = Math.round(this.maxnum / 2); //中位数
+    this.maxpage = 1; //最大页码
+    this.current = 1; //当前页码
+    this.doms = {
+      wrap: document.getElementById(id), //父dom
+      dPre: null, //上一页
+      dNex: null, //下一页
+      dLdot: null, //左省略号
+      dRdot: null, //右省略号
+      dPage: null //页码
+    };
+    this.callback = function(n) {
+      console.log('turn to page', n);
+    };
+  };
+  Pagination.prototype = {
+    pageTo: function(n) { //翻页执行的方法
+      this.callback(n);
+      this.rend(n);
+    },
+    rend: function(n) { //渲染dom
+      var _num = this.num,
+        _max = this.maxpage,
+        mid = this.mid,
+        doms = this.doms,
+        dPage = doms.dPage; //页码
+      for (var i = 0, l = _num, tmp, txt; i < l; i++) {
+        tmp = dPage[i];
+        switch (i) {
+          case 0: //第一个
+            txt = 1;
+            break;
+          case l - 1: //最后一个
+            txt = _max;
+            break;
+          default: //其他
+            if (n <= mid) { //比较小时
+              txt = i + 1;
+            } else if (n >= _max - mid + 1) { //比较大时
+              txt = _max - _num + i + 1;
+            } else { //适中时
+              txt = n - mid + i + 1;
+            }
+            tmp.innerHTML = txt
+        }
+        txt == n ? addClass(tmp, 'disabled') : rmClass(tmp, 'disabled');
+      }
+      n == 1 ? addClass(doms.dPre, 'disabled') : rmClass(doms.dPre, 'disabled'); //是否第一页
+      n == _max ? addClass(doms.dNex, 'disabled') : rmClass(doms.dNex, 'disabled'); //是否最后一页
+      if (_max > _num) { //省略号
+        dPage[1].innerHTML == 2 ? addClass(doms.dLdot, 'disabled') : rmClass(doms.dLdot, 'disabled');
+        dPage[_num - 2].innerHTML == _max - 1 ? addClass(doms.dRdot, 'disabled') : rmClass(doms.dRdot, 'disabled');
+      }
+    },
+    init: function(maxpage, callback) { //初始化
+      var self = this,
+        doms = self.doms,
+        _wrap = doms.wrap;
+      if (!_wrap) {
+        // console.warn('如要添加分页，请在html中加入id为 ' + self.id + ' 的div');
+        return;
+      }
+      // console.log('pagination baseon ' + self.id + ' initialization success!');
+      //为了兼容ie8，别嫌奇怪
+      var domTmp = document.createElement('div');
+      domTmp.innerHTML = 'x<style>.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.pagination-zldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.pagination-zldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.pagination-zldl>.next.disabled,.pagination-zldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.pagination-zldl>.ldot,.pagination-zldl>.rdot{border:none;background:0 0}.pagination-zldl>.ldot.disabled,.pagination-zldl>.rdot.disabled{display:none}</style>'
+      document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
+      _wrap.className = 'pagination-zldl';
+      if (typeof(maxpage) == 'number') {
+        if (maxpage <= 1) {
+          _wrap.style.display = 'none';
+          return;
+        } else {
+          _wrap.style.display = 'block';
+          self.maxpage = maxpage;
+        }
+      } else {
+        // console.warn('the 1st argument in init must be a number!');
+        return;
+      }
+      if (callback && typeof(callback) == 'function') {
+        self.callback = callback;
+      } else {
+        // console.warn('the 2nd argument in init must be a function!');
+        return;
+      }
+      var _num = self.num = self.maxnum > maxpage ? maxpage : self.maxnum;
+      var domArr = ['<span class="prev disabled">' + self.prevTxt + '</span><span class="page disabled">1</span><span class="ldot disabled"> … </span>'];
+      for (var i = 1, tempTxt; i < _num; i++) {
+        tempTxt = i + 1;
+        if (i == _num - 1) {
+          var show = ' disabled';
+          if (maxpage > _num) {
+            tempTxt = maxpage;
+            show = '';
+          }
+          domArr.push('<span class="rdot' + show + '"> … </span>');
+        }
+        domArr.push('<span class="page">' + tempTxt + '</span>');
+      }
+      domArr.push('<span class="next">' + self.nextTxt + '</span>');
+      _wrap.innerHTML = domArr.join('');
+      doms.dPre = _wrap.querySelector('.prev'); //上一页
+      doms.dNex = _wrap.querySelector('.next'); //下一页
+      doms.dLdot = _wrap.querySelector('.ldot'); //左省略号
+      doms.dRdot = _wrap.querySelector('.rdot'); //右省略号
+      doms.dPage = _wrap.querySelectorAll('.page'); //页码
+
+      _wrap.onclick = function(e) {
+        var e = e || window.event,
+          target = e.target || e.srcElement; //兼容ie8
+        switch (target.className) {
+          case 'page':
+            if (self.current != +target.innerHTML) {
+              self.pageTo(self.current = +target.innerHTML);
+            }
+            break;
+          case 'prev':
+            if (self.current > 1) {
+              self.pageTo(--self.current);
+            }
+            break;
+          case 'next':
+            if (self.current < self.maxpage) {
+              self.pageTo(++self.current);
+            }
+            break;
+        }
+      }
+    }
+  };
+  var hasClass = function(dom, cn) { //是否有class
+    return dom.nodeType === 1 && (" " + dom.className + " ").replace(/\s+/g, " ").indexOf(" " + cn + " ") !== -1;
+  };
+  var addClass = function(dom, cn) { //添加class
+    hasClass(dom, cn) || (dom.className = dom.className + " " + cn);
+  };
+  var rmClass = function(dom, cn) { //移除class
+    hasClass(dom, cn) && (dom.className = (" " + dom.className).replace(" " + cn, "").replace(/(^\s*)/g, ""));
+  };
+  "object" == typeof exports ? module.exports = Pagination : "function" == typeof define && (define.cmd || define.amd) ? define(function() {
+    return Pagination
+  }) : window.Pagination = Pagination;
+}()

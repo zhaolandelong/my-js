@@ -1,4 +1,9 @@
-//纯原生无依赖，支持多个pagination
+/**
+ * 2017.01.31 by zhaolandelong
+ * zhaolandelong@163.com
+ * https://github.com/zhaolandelong
+ * friendly to ie8+ and totaly native
+ */
 ! function() {
   "use strict";
 
@@ -67,10 +72,10 @@
         doms = self.doms,
         _wrap = doms.wrap;
       if (!_wrap) {
-        console.warn('如要添加分页，请在html中加入id为 ' + self.id + ' 的div');
+        // console.warn('如要添加分页，请在html中加入id为 ' + self.id + ' 的div');
         return;
       }
-      console.log('pagination baseon ' + self.id + ' initialization success!');
+      // console.log('pagination baseon ' + self.id + ' initialization success!');
       //为了兼容ie8，别嫌奇怪
       var domTmp = document.createElement('div');
       domTmp.innerHTML = 'x<style>.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;padding:5px;font-size:14px;text-align:center;color:#666}.pagination-zldl>.next,.pagination-zldl>.page,.pagination-zldl>.prev{display:inline-block;box-sizing:border-box;padding:7px 13px;border:1px solid #d1d1d1;background-color:#fff;cursor:pointer;margin:0 3px}.pagination-zldl>.active{color:#fff;border:1px solid #55626d;background:#55626d}</style>'
@@ -85,13 +90,13 @@
           self.maxpage = maxpage;
         }
       } else {
-        console.warn('the 1st argument in init must be a number!');
+        // console.warn('the 1st argument in init must be a number!');
         return;
       }
       if (callback && typeof(callback) == 'function') {
         self.callback = callback;
       } else {
-        console.warn('the 2nd argument in init must be a function!');
+        // console.warn('the 2nd argument in init must be a function!');
         return;
       }
       var _num = self.num = self.maxnum > maxpage ? maxpage : self.maxnum;

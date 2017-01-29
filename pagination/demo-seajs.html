@@ -11,15 +11,15 @@
         border: 1px solid #ccc;
         padding: 20px;
     }
-    
+
     .show {
         text-align: center;
     }
-    
+
     .show>div {
         margin: 10px 0;
     }
-    
+
     .num {
         color: #f60;
         font-weight: bold;
@@ -80,11 +80,11 @@
         </div>
         <div id="pagination2"></div>
     </div>
-    <script src="../../lib/sea.js"></script>
+    <script src="../lib/sea.js"></script>
     <script>
     seajs.config({
         alias: {
-            Pagination: '../min/pagination-zldl-2.0.min.js'
+            Pagination: './min/pagination-chinahrCampus.js'
         }
     });
     seajs.use('Pagination', function(Pagination) {
@@ -105,7 +105,7 @@
             },
             handle2 = function() {
                 var maxNo2 = _max2.innerHTML = +_input2.value,
-                    pagination2 = new Pagination('pagination2');
+                    pagination2 = new Pagination('pagination2',7,'＜上一页','下一页＞');
                 pagination2.init(maxNo2, function(n) {
                     _pn2.innerHTML = n;
                 });

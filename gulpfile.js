@@ -11,8 +11,8 @@ var gulp = require('gulp'),
   base = __dirname,
   pros = ['pagination', 'dialog', 'util'];
 gulp.task('pagination', () => {
-  // const type = "default";
-  const type = "chinahrCampus";
+  const type = "default";
+  // const type = "chinahrCampus";
   let src = './pagination/src',
     dist = './pagination/dist';
   gulp.src(src + '/style/*.less')
@@ -27,9 +27,10 @@ gulp.task('pagination', () => {
           this.push(file);
           cb();
         }))
-        .pipe(uglify())
         .pipe(rename('pagination-'+type+'.js'))
-        .pipe(gulp.dest(dist));
+        .pipe(gulp.dest(dist))
+        .pipe(uglify())
+        .pipe(gulp.dest('./pagination/min'))
     })
 });
 gulp.task('test', function() {
