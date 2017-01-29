@@ -1,0 +1,34 @@
+@import "../common.less";
+
+.pagination-zldl {
+    .wrap();
+    padding: 5px;
+    font-size: 14px;
+    color: #666;
+    line-height: 18px;
+
+    & > .next,
+    & > .page,
+    & > .prev {
+        .item();
+        padding: 7px 13px;
+        border: 1px solid #d1d1d1;
+        background-color: #ffffff;
+        margin: 0 3px;
+    }
+
+    & > .page.disabled {
+        color: #fff;
+        border: 1px solid #55626d;
+        background: #55626d;
+    }
+
+    & > .ldot,
+    & > .next,
+    & > .prev,
+    & > .rdot {
+        &.disabled {
+            display: none;
+        }
+    }
+}

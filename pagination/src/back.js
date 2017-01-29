@@ -62,7 +62,7 @@
             console.log('pagination baseon ' + this.id + ' initialization success!');
             //为了兼容ie8，别嫌奇怪
             var domTmp = document.createElement('div');
-            domTmp.innerHTML = 'x<style>.pagination-zldl{-moz-user-select: none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin: 0 auto;padding: 5px;font-size: 14px;text-align: center;color: #666;}.pagination-zldl>.page,.pagination-zldl>.prev,.pagination-zldl>.next{display: inline-block;box-sizing: border-box;padding: 7px 13px;border: 1px solid #d1d1d1;background-color: #ffffff;cursor: pointer;margin: 0 3px}.pagination-zldl>.active{color: #fff;border: 1px solid #55626d;background: #55626d;}</style>'
+            domTmp.innerHTML = 'x<style>.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;padding:5px;font-size:14px;text-align:center;color:#666}.pagination-zldl>.next,.pagination-zldl>.page,.pagination-zldl>.prev{display:inline-block;box-sizing:border-box;padding:7px 13px;border:1px solid #d1d1d1;background-color:#fff;cursor:pointer;margin:0 3px}.pagination-zldl>.active{color:#fff;border:1px solid #55626d;background:#55626d}</style>'
             document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
             _pagination.className = 'pagination-zldl';
             if (typeof(maxpage) == 'number') {

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
+    <title>pigination demo</title>
+    <style>
+    pre {
+        background: #efefef;
+        border: 1px solid #ccc;
+        padding: 20px;
+    }
+
+    .show {
+        text-align: center;
+    }
+
+    .show>div {
+        margin: 10px 0;
+    }
+
+    .num {
+        color: #f60;
+        font-weight: bold;
+    }
+    </style>
+</head>
+
+<body>
+    <h1>pigination 原生环境下demo</h1>
+    <p>引用步骤如下：</p>
+    <ol>
+        <li>
+            <p>html中引入pagination-zldl.js文件，即在全局下生成Pagination构造函数</p>
+            <pre>&lt;script src="../pagination-zldl.js"&gt;&lt;/script&gt;</pre></li>
+        <li>
+            <p>实例化(可实例化多个)new Pagination(id)；id-对应html中的元素id</p>
+            <pre>var pagination = new Pagination('pagination')</pre></li>
+        <li>
+            <p>html适当位置加入div，id要与实例化中参数对应</p>
+            <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre></li>
+        <li>
+            <p>js中调用实例的init(maxpage, callback)方法</p>
+            <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
+            <pre>eg: pagination.init( 10 , function(n){ console.log('page NO. is' + n);} );</pre></li>
+    </ol>
+    <div class="show">
+        <h2>展示区-实例pagination1</h2>
+        <div>
+            请输入总页码，并确定：
+            <input id="input1" type="text" value="5">
+            <button id="ensure1" onclick="handle1()">确定</button>
+        </div>
+        <div>
+            共<span id="max1" class="num"></span>页，当前是第<span id="pn1" class="num">1</span>页
+        </div>
+        <div id="pagination1"></div>
+        <h2>展示区-实例pagination2</h2>
+        <div>
+            请输入总页码，并确定：
+            <input id="input2" type="text" value="20">
+            <button id="ensure2" onclick="handle2()">确定</button>
+        </div>
+        <div>
+            共<span id="max2" class="num"></span>页，当前是第<span id="pn2" class="num">1</span>页
+        </div>
+        <div id="pagination2"></div>
+    </div>
+    <script src="./dist/pagination-chinahrCampus.js"></script>
+    <!-- <script src="./dist/pagination-default.js"></script> -->
+    <!-- <script src="../min/pagination-zldl-2.0.min.js"></script> -->
+    <script>
+    var _pn1 = document.getElementById('pn1'),
+        _pn2 = document.getElementById('pn2'),
+        _max1 = document.getElementById('max1'),
+        _max2 = document.getElementById('max2'),
+        _input1 = document.getElementById('input1'),
+        _input2 = document.getElementById('input2'),
+        handle1 = function() {
+            var maxNo1 = _max1.innerHTML = +_input1.value,
+                pagination1 = new Pagination('pagination1');
+            pagination1.init(maxNo1, function(n) {
+                _pn1.innerHTML = n;
+            });
+        },
+        handle2 = function() {
+            var maxNo2 = _max2.innerHTML = +_input2.value,
+                pagination2 = new Pagination('pagination2',7,'＜上一页','下一页＞');
+            pagination2.init(maxNo2, function(n) {
+                _pn2.innerHTML = n;
+            });
+        };
+    handle1();
+    handle2();
+    </script>
+</body>
+
+</html>

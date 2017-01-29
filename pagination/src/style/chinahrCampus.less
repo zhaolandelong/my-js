@@ -1,0 +1,41 @@
+@import "../common.less";
+
+.pagination-zldl {
+    .wrap();
+    color: #1e1e1e;
+    line-height: 18px;
+    font-size: 0;
+
+    & > span {
+        .item();
+        font-size: 14px;
+        background: #f0f0f0;
+        border: 1px solid #d9d9d9;
+        padding: 10px 15px;
+        margin: 0 3px;
+    }
+
+    & > .page.disabled {
+        color: #4bbd73;
+        background: none;
+        border: none;
+    }
+
+    & > .next,
+    & > .prev {
+        &.disabled {
+            color: #cfcfcf;
+            border: 1px solid #dcdcdc;
+        }
+    }
+
+    & > .ldot,
+    & > .rdot {
+        border: none;
+        background: none;
+
+        &.disabled {
+            display: none;
+        }
+    }
+}
