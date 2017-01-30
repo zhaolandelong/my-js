@@ -11,8 +11,8 @@ var gulp = require('gulp'),
   base = __dirname,
   pros = ['pagination', 'dialog', 'util'];
 gulp.task('pagination', () => {
-  const type = "default";
-  // const type = "chinahrCampus";
+  // const type = "default";
+  const type = "chinahrCampus";
   let src = './pagination/src',
     dist = './pagination/dist';
   gulp.src(src + '/style/*.less')
@@ -22,7 +22,8 @@ gulp.task('pagination', () => {
       gulp.src(src + '/entry.js')
         .pipe(through2.obj(function(file, enc, cb) {
           let cssTxt = fs.readFileSync(dist + '/style/'+type+'.css', 'utf-8');
-          let jsTxt = String(file.contents).replace(/x<style>(.*)<\/style>/g, "x<style>" + cssTxt + "</style>");
+          let jsTxt = String(file.contents).replace(/@@style@@/g, cssTxt);
+          // let jsTxt = String(file.contents).replace(/x<style id="paginationStyleZldl">(.*)<\/style>/g, 'x<style id="paginationStyleZldl">' + cssTxt + '</style>');
           file.contents = new Buffer(jsTxt);
           this.push(file);
           cb();

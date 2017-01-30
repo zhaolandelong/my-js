@@ -7,17 +7,26 @@
 ! function() {
   "use strict";
 
-  var Pagination = function(id, num, prevTxt, nextTxt) {
-    this.id = id; //主id
-    this.prevTxt = prevTxt || "上一页";
-    this.nextTxt = nextTxt || "下一页";
-    this.maxnum = num || 7; //最大item数
+  var Pagination = function(options) {
+    var _options = typeof(options)=='object'?options:{};
+    this.options = {
+      id: "pagination", //主id
+      item: 7, //最大item数
+      prev: "上一页",
+      next: "下一页",
+      styleId: "paginationZldl" //style标签的id，防止重复添加
+    };
+    for (var key in this.options) {
+      if(_options[key]){
+        this.options[key] = _options[key];
+      }
+    }
     this.num = 1; //当n很小时的item数
-    this.mid = Math.round(this.maxnum / 2); //中位数
+    this.mid = Math.round(this.options.item / 2); //中位数
     this.maxpage = 1; //最大页码
     this.current = 1; //当前页码
     this.doms = {
-      wrap: document.getElementById(id), //父dom
+      wrap: document.getElementById(this.options.id), //父dom
       dPre: null, //上一页
       dNex: null, //下一页
       dLdot: null, //左省略号
@@ -72,14 +81,16 @@
         doms = self.doms,
         _wrap = doms.wrap;
       if (!_wrap) {
-        // console.warn('如要添加分页，请在html中加入id为 ' + self.id + ' 的div');
+        console.warn('如要添加分页，请在html中加入id为 ' + self.options.id + ' 的div');
         return;
       }
-      // console.log('pagination baseon ' + self.id + ' initialization success!');
+      console.log('pagination baseon ' + self.options.id + ' initialization success!');
       //为了兼容ie8，别嫌奇怪
-      var domTmp = document.createElement('div');
-      domTmp.innerHTML = 'x<style>.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.pagination-zldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.pagination-zldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.pagination-zldl>.next.disabled,.pagination-zldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.pagination-zldl>.ldot,.pagination-zldl>.rdot{border:none;background:0 0}.pagination-zldl>.ldot.disabled,.pagination-zldl>.rdot.disabled{display:none}</style>'
-      document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
+      if (!document.getElementById(self.styleId)) { //防止重复添加
+        var domTmp = document.createElement('div');
+        domTmp.innerHTML = 'x<style id="paginationStyleZldl">.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.pagination-zldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.pagination-zldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.pagination-zldl>.next.disabled,.pagination-zldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.pagination-zldl>.ldot,.pagination-zldl>.rdot{border:none;background:0 0}.pagination-zldl>.ldot.disabled,.pagination-zldl>.rdot.disabled{display:none}</style>';
+        document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
+      }
       _wrap.className = 'pagination-zldl';
       if (typeof(maxpage) == 'number') {
         if (maxpage <= 1) {
@@ -90,17 +101,17 @@
           self.maxpage = maxpage;
         }
       } else {
-        // console.warn('the 1st argument in init must be a number!');
+        console.warn('the 1st argument in init must be a number!');
         return;
       }
       if (callback && typeof(callback) == 'function') {
         self.callback = callback;
       } else {
-        // console.warn('the 2nd argument in init must be a function!');
+        console.warn('the 2nd argument in init must be a function!');
         return;
       }
-      var _num = self.num = self.maxnum > maxpage ? maxpage : self.maxnum;
-      var domArr = ['<span class="prev disabled">' + self.prevTxt + '</span><span class="page disabled">1</span><span class="ldot disabled"> … </span>'];
+      var _num = self.num = self.options.item > maxpage ? maxpage : self.options.item;
+      var domArr = ['<span class="prev disabled">' + self.options.prev + '</span><span class="page disabled">1</span><span class="ldot disabled"> … </span>'];
       for (var i = 1, tempTxt; i < _num; i++) {
         tempTxt = i + 1;
         if (i == _num - 1) {
@@ -113,7 +124,7 @@
         }
         domArr.push('<span class="page">' + tempTxt + '</span>');
       }
-      domArr.push('<span class="next">' + self.nextTxt + '</span>');
+      domArr.push('<span class="next">' + self.options.next + '</span>');
       _wrap.innerHTML = domArr.join('');
       doms.dPre = _wrap.querySelector('.prev'); //上一页
       doms.dNex = _wrap.querySelector('.next'); //下一页

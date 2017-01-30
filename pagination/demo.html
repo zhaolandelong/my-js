@@ -35,11 +35,12 @@
             <p>html中引入pagination-zldl.js文件，即在全局下生成Pagination构造函数</p>
             <pre>&lt;script src="../pagination-zldl.js"&gt;&lt;/script&gt;</pre></li>
         <li>
-            <p>实例化(可实例化多个)new Pagination(id)；id-对应html中的元素id</p>
-            <pre>var pagination = new Pagination('pagination')</pre></li>
+            <p>实例化(可实例化多个)new Pagination(options)，options为对象，其属性如下：</p>
+            <p>id-对应html中的元素id(必须 默认pagination)；num-页码个数(默认7)；prev/next-按钮文案(默认 上一页/下一页)</p>
+            <pre>var pagination = new Pagination({id:"pagination",item:7,prev:"上一页",next:"下一页"})</pre></li>
         <li>
             <p>html适当位置加入div，id要与实例化中参数对应</p>
-            <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre></li>
+            <pre>&lt;div id="paginationId"&gt;&lt;/div&gt;</pre></li>
         <li>
             <p>js中调用实例的init(maxpage, callback)方法</p>
             <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
@@ -68,6 +69,7 @@
         <div id="pagination2"></div>
     </div>
     <script src="./min/pagination-chinahrCampus.js"></script>
+    <!-- <script src="./dist/pagination-chinahrCampus.js"></script> -->
     <script>
     var _pn1 = document.getElementById('pn1'),
         _pn2 = document.getElementById('pn2'),
@@ -77,14 +79,15 @@
         _input2 = document.getElementById('input2'),
         handle1 = function() {
             var maxNo1 = _max1.innerHTML = +_input1.value,
-                pagination1 = new Pagination('pagination1');
+                pagination1 = new Pagination({id:"pagination1"});
             pagination1.init(maxNo1, function(n) {
                 _pn1.innerHTML = n;
             });
         },
         handle2 = function() {
             var maxNo2 = _max2.innerHTML = +_input2.value,
-                pagination2 = new Pagination('pagination2',7,'＜上一页','下一页＞');
+                // pagination2 = new Pagination('pagination2',7,'＜上一页','下一页＞');
+                pagination2 = new Pagination({id:"pagination2",item:5,prev:"＜上一页",next:"下一页＞"});
             pagination2.init(maxNo2, function(n) {
                 _pn2.innerHTML = n;
             });
