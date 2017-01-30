@@ -6,18 +6,18 @@
  */
 ! function() {
   "use strict";
-
+  var pluginName = "paginationZldl";
   var Pagination = function(options) {
-    var _options = typeof(options)=='object'?options:{};
+    var _options = typeof(options) == 'object' ? options : {};
     this.options = {
       id: "pagination", //主id
       item: 7, //最大item数
       prev: "上一页",
       next: "下一页",
-      styleId: "paginationZldl" //style标签的id，防止重复添加
+      styleId: pluginName //class的前缀，同时是style标签的id，防止重复添加
     };
     for (var key in this.options) {
-      if(_options[key]){
+      if (_options[key]) {
         this.options[key] = _options[key];
       }
     }
@@ -86,12 +86,14 @@
       }
       console.log('pagination baseon ' + self.options.id + ' initialization success!');
       //为了兼容ie8，别嫌奇怪
-      if (!document.getElementById(self.styleId)) { //防止重复添加
-        var domTmp = document.createElement('div');
-        domTmp.innerHTML = 'x<style id="paginationStyleZldl">.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.pagination-zldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.pagination-zldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.pagination-zldl>.next.disabled,.pagination-zldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.pagination-zldl>.ldot,.pagination-zldl>.rdot{border:none;background:0 0}.pagination-zldl>.ldot.disabled,.pagination-zldl>.rdot.disabled{display:none}</style>';
+      if (!document.getElementById(self.options.styleId)) { //防止重复添加
+        var domTmp = document.createElement('div'),
+          re = new RegExp(pluginName, 'g'),
+          css = '.paginationZldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.paginationZldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.paginationZldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.paginationZldl>.next.disabled,.paginationZldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.paginationZldl>.ldot,.paginationZldl>.rdot{border:none;background:0 0}.paginationZldl>.ldot.disabled,.paginationZldl>.rdot.disabled{display:none}'.replace(re, this.options.styleId);
+        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + css + '</style>';
         document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
       }
-      _wrap.className = 'pagination-zldl';
+      _wrap.className = self.options.styleId;
       if (typeof(maxpage) == 'number') {
         if (maxpage <= 1) {
           _wrap.style.display = 'none';

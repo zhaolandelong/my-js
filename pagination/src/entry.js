@@ -6,18 +6,18 @@
  */
 ! function() {
   "use strict";
-
+  var PLUGINNAME = "paginationZldl";
   var Pagination = function(options) {
-    var _options = typeof(options)=='object'?options:{};
+    var _options = typeof(options) == 'object' ? options : {};
     this.options = {
       id: "pagination", //主id
       item: 7, //最大item数
       prev: "上一页",
       next: "下一页",
-      styleId: "paginationZldl" //style标签的id，防止重复添加
+      styleId: PLUGINNAME //class的前缀，同时是style标签的id，防止重复添加
     };
     for (var key in this.options) {
-      if(_options[key]){
+      if (_options[key]) {
         this.options[key] = _options[key];
       }
     }
@@ -86,12 +86,14 @@
       }
       console.log('pagination baseon ' + self.options.id + ' initialization success!');
       //为了兼容ie8，别嫌奇怪
-      if (!document.getElementById(self.styleId)) { //防止重复添加
-        var domTmp = document.createElement('div');
-        domTmp.innerHTML = 'x<style id="paginationStyleZldl">@@style@@</style>';
+      if (!document.getElementById(self.options.styleId)) { //防止重复添加
+        var domTmp = document.createElement('div'),
+          re = new RegExp(PLUGINNAME, 'g'),
+          css = '@@style@@'.replace(re, this.options.styleId);
+        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + css + '</style>';
         document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
       }
-      _wrap.className = 'pagination-zldl';
+      _wrap.className = self.options.styleId;
       if (typeof(maxpage) == 'number') {
         if (maxpage <= 1) {
           _wrap.style.display = 'none';

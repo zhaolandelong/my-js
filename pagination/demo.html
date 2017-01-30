@@ -36,15 +36,26 @@
             <pre>&lt;script src="../pagination-zldl.js"&gt;&lt;/script&gt;</pre></li>
         <li>
             <p>实例化(可实例化多个)new Pagination(options)，options为对象，其属性如下：</p>
-            <p>id-对应html中的元素id(必须 默认pagination)；num-页码个数(默认7)；prev/next-按钮文案(默认 上一页/下一页)</p>
-            <pre>var pagination = new Pagination({id:"pagination",item:7,prev:"上一页",next:"下一页"})</pre></li>
+            <p>id-对应html中的元素id(必须 默认pagination)；num-页码个数(默认7)；prev/next-按钮文案(默认 上一页/下一页)；styleId-样式名前缀，冲突时修改此项，用到的几率极小（默认paginationZldl）</p>
+            <pre>var pagination = new Pagination({id:"pagination",item:7,prev:"上一页",next:"下一页",styleId:"paginationZldl"})</pre></li>
         <li>
             <p>html适当位置加入div，id要与实例化中参数对应</p>
-            <pre>&lt;div id="paginationId"&gt;&lt;/div&gt;</pre></li>
+            <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre></li>
         <li>
             <p>js中调用实例的init(maxpage, callback)方法</p>
             <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
             <pre>eg: pagination.init( 10 , function(n){ console.log('page NO. is' + n);} );</pre></li>
+        <li>
+          <p>兼容cmd，amd模式，在实例化之前声明变量即可</p>
+          <pre>
+eg:
+  seajs.use('./min/pagination-zldl.js', function(Pagination) {
+      var pagination = new Pagination({id:"pagination",item:7,prev:"上一页",next:"下一页",styleId:"paginationZldl"});
+      pagination.init(10,function(n){
+          console.log(n);
+          //code here
+      });
+  });</pre></li>
     </ol>
     <div class="show">
         <h2>展示区-实例pagination1</h2>
@@ -68,8 +79,8 @@
         </div>
         <div id="pagination2"></div>
     </div>
-    <script src="./min/pagination-chinahrCampus.js"></script>
-    <!-- <script src="./dist/pagination-chinahrCampus.js"></script> -->
+    <!-- <script src="./min/pagination-chinahr.js"></script> -->
+    <script src="./dist/pagination-chinahr.js"></script>
     <script>
     var _pn1 = document.getElementById('pn1'),
         _pn2 = document.getElementById('pn2'),
@@ -87,7 +98,7 @@
         handle2 = function() {
             var maxNo2 = _max2.innerHTML = +_input2.value,
                 // pagination2 = new Pagination('pagination2',7,'＜上一页','下一页＞');
-                pagination2 = new Pagination({id:"pagination2",item:5,prev:"＜上一页",next:"下一页＞"});
+                pagination2 = new Pagination({id:"pagination2",item:5,prev:"＜上一页",next:"下一页＞",styleId:"paginationZldl"});
             pagination2.init(maxNo2, function(n) {
                 _pn2.innerHTML = n;
             });
