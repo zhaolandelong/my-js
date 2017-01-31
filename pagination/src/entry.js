@@ -7,6 +7,7 @@
 ! function() {
   "use strict";
   var PLUGINNAME = "paginationZldl";
+  var STYLE = '@@include("../dist/style.css")';
   var Pagination = function(options) {
     var _options = typeof(options) == 'object' ? options : {};
     this.options = {
@@ -85,12 +86,11 @@
         return;
       }
       console.log('pagination baseon ' + self.options.id + ' initialization success!');
-      //为了兼容ie8，别嫌奇怪
       if (!document.getElementById(self.options.styleId)) { //防止重复添加
         var domTmp = document.createElement('div'),
-          re = new RegExp(PLUGINNAME, 'g'),
-          css = '@@style@@'.replace(re, this.options.styleId);
-        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + css + '</style>';
+          re = new RegExp(PLUGINNAME, 'g');
+        //为了兼容ie8，别嫌奇怪
+        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + STYLE.replace(re, self.options.styleId) + '</style>';
         document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
       }
       _wrap.className = self.options.styleId;

@@ -6,19 +6,22 @@
  */
 ! function() {
   "use strict";
-
+  var PLUGINNAME = "paginationZldl";
+  var STYLE = '.paginationZldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;padding:5px;font-size:14px;color:#666;line-height:18px}.paginationZldl>.next,.paginationZldl>.page,.paginationZldl>.prev{display:inline-block;box-sizing:border-box;cursor:pointer;padding:7px 13px;border:1px solid #d1d1d1;background-color:#fff;margin:0 3px}.paginationZldl>.page.disabled{background:#55626d;color:#fff;border:none}.paginationZldl>.ldot.disabled,.paginationZldl>.next.disabled,.paginationZldl>.prev.disabled,.paginationZldl>.rdot.disabled{display:none}';
   var Pagination = function(options) {
+    var _options = typeof(options) == 'object' ? options : {};
     this.options = {
       id: "pagination", //主id
       item: 7, //最大item数
       prev: "上一页",
       next: "下一页",
-      styleId: "paginationZldl" //style标签的id
+      styleId: PLUGINNAME //class的前缀，同时是style标签的id，防止重复添加
     };
     for (var key in this.options) {
-      options[key] && this.options[key] = options[key];
+      if (_options[key]) {
+        this.options[key] = _options[key];
+      }
     }
-    console.log(this.options);
     this.num = 1; //当n很小时的item数
     this.mid = Math.round(this.options.item / 2); //中位数
     this.maxpage = 1; //最大页码
@@ -79,17 +82,18 @@
         doms = self.doms,
         _wrap = doms.wrap;
       if (!_wrap) {
-        console.warn('如要添加分页，请在html中加入id为 ' + self.id + ' 的div');
+        console.warn('如要添加分页，请在html中加入id为 ' + self.options.id + ' 的div');
         return;
       }
-      console.log('pagination baseon ' + self.id + ' initialization success!');
-      //为了兼容ie8，别嫌奇怪
-      if (!document.getElementById(self.styleId)) { //防止重复添加
-        var domTmp = document.createElement('div');
-        domTmp.innerHTML = 'x<style id="paginationStyleZldl">.pagination-zldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;padding:5px;font-size:14px;color:#666;line-height:18px}.pagination-zldl>.next,.pagination-zldl>.page,.pagination-zldl>.prev{display:inline-block;box-sizing:border-box;cursor:pointer;padding:7px 13px;border:1px solid #d1d1d1;background-color:#fff;margin:0 3px}.pagination-zldl>.page.disabled{background:#55626d;color:#fff;border:none}.pagination-zldl>.ldot.disabled,.pagination-zldl>.next.disabled,.pagination-zldl>.prev.disabled,.pagination-zldl>.rdot.disabled{display:none}</style>';
+      console.log('pagination baseon ' + self.options.id + ' initialization success!');
+      if (!document.getElementById(self.options.styleId)) { //防止重复添加
+        var domTmp = document.createElement('div'),
+          re = new RegExp(PLUGINNAME, 'g');
+        //为了兼容ie8，别嫌奇怪
+        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + STYLE.replace(re, self.options.styleId) + '</style>';
         document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
       }
-      _wrap.className = 'pagination-zldl';
+      _wrap.className = self.options.styleId;
       if (typeof(maxpage) == 'number') {
         if (maxpage <= 1) {
           _wrap.style.display = 'none';

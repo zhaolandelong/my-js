@@ -6,7 +6,8 @@
  */
 ! function() {
   "use strict";
-  var pluginName = "paginationZldl";
+  var PLUGINNAME = "paginationZldl";
+  var STYLE = '.paginationZldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.paginationZldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.paginationZldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.paginationZldl>.next.disabled,.paginationZldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.paginationZldl>.ldot,.paginationZldl>.rdot{border:none;background:0 0}.paginationZldl>.ldot.disabled,.paginationZldl>.rdot.disabled{display:none}';
   var Pagination = function(options) {
     var _options = typeof(options) == 'object' ? options : {};
     this.options = {
@@ -14,7 +15,7 @@
       item: 7, //最大item数
       prev: "上一页",
       next: "下一页",
-      styleId: pluginName //class的前缀，同时是style标签的id，防止重复添加
+      styleId: PLUGINNAME //class的前缀，同时是style标签的id，防止重复添加
     };
     for (var key in this.options) {
       if (_options[key]) {
@@ -85,12 +86,11 @@
         return;
       }
       console.log('pagination baseon ' + self.options.id + ' initialization success!');
-      //为了兼容ie8，别嫌奇怪
       if (!document.getElementById(self.options.styleId)) { //防止重复添加
         var domTmp = document.createElement('div'),
-          re = new RegExp(pluginName, 'g'),
-          css = '.paginationZldl{-moz-user-select:none;-o-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;margin:0 auto;text-align:center;color:#1e1e1e;line-height:18px;font-size:0}.paginationZldl>span{display:inline-block;box-sizing:border-box;cursor:pointer;font-size:14px;background:#f0f0f0;border:1px solid #d9d9d9;padding:10px 15px;margin:0 3px}.paginationZldl>.page.disabled{color:#4bbd73;background:0 0;border:none}.paginationZldl>.next.disabled,.paginationZldl>.prev.disabled{color:#cfcfcf;border:1px solid #dcdcdc}.paginationZldl>.ldot,.paginationZldl>.rdot{border:none;background:0 0}.paginationZldl>.ldot.disabled,.paginationZldl>.rdot.disabled{display:none}'.replace(re, this.options.styleId);
-        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + css + '</style>';
+          re = new RegExp(PLUGINNAME, 'g');
+        //为了兼容ie8，别嫌奇怪
+        domTmp.innerHTML = 'x<style id="' + self.options.styleId + '">' + STYLE.replace(re, self.options.styleId) + '</style>';
         document.getElementsByTagName('head')[0].appendChild(domTmp.lastChild);
       }
       _wrap.className = self.options.styleId;
