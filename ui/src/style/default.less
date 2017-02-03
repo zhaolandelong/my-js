@@ -1,4 +1,6 @@
 .uiZldl {
+    display: none;
+
     &-mask {
         position: fixed;
         z-index: 9998;
@@ -15,11 +17,12 @@
         font-family: "Microsoft Yahei";
         position: fixed;
         z-index: 9999;
-        top: 200px;
+        top: 10%;
         right: 0;
         left: 0;
         box-sizing: border-box;
-        width: 300px;
+        width: 80%;
+        max-width: 600px;
         margin: auto;
         padding: 14px;
         text-align: right;
@@ -40,9 +43,13 @@
     }
 
     &-x {
-      display: inline-block;
-      text-decoration: none;
-      float: right;
+        display: inline-block;
+        text-decoration: none;
+        color: #999;
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        font-size: 20px;
     }
 
     &-txt {
