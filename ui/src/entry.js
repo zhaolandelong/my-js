@@ -1,3 +1,9 @@
+/**
+ * 2017.02.02 by zhaolandelong
+ * zhaolandelong@163.com
+ * https://github.com/zhaolandelong
+ * friendly to ie8+ and totaly native
+ */
 ! function() {
   "use strict";
   var PLUGINNAME = "uiZldl";
