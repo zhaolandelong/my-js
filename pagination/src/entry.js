@@ -1,5 +1,5 @@
 /**
- * 2017.01.31 by zhaolandelong
+ * 2017.02.03 by zhaolandelong
  * zhaolandelong@163.com
  * https://github.com/zhaolandelong
  * friendly to ie8+ and totaly native
@@ -137,6 +137,7 @@
       _wrap.onclick = function(e) {
         var e = e || window.event,
           target = e.target || e.srcElement; //兼容ie8
+        (e.preventDefault) ? e.preventDefault(): e.returnValue = false;
         switch (target.className) {
           case 'page':
             if (self.current != +target.innerHTML) {
