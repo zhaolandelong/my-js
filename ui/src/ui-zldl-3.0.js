@@ -1,6 +1,13 @@
+/**
+ * 2017.06.28 by zhaolandelong
+ * zhaolandelong@163.com
+ * https://github.com/zhaolandelong
+ * friendly to ie8+ and totally native
+ */
 ! function() {
     "use strict ";
     var PLUGINNAME = "uiZldl";
+    var ui = null;
     if (!document.getElementById(PLUGINNAME)) { //防止重复运行
         //加入dialog最外层包裹
         var domDialog = document.createElement('div');
@@ -47,8 +54,8 @@
         //样式
         var styleObj = {
             dialog: {
-                display: 'none',
-                position: 'relative',
+                'display': 'none',
+                'position': 'relative',
                 'z-index': 9999
             },
             mask: {
@@ -104,26 +111,25 @@
                 'text-decoration': 'none'
             },
             x: {
-                'position': 'absolute',
-                'right': '10px',
-                'font-size': '22px',
-                'top': 0,
-                'color': '#999',
-                'text-decoration': 'none'
+                'display': 'none'
             },
             toast: {
                 'display': 'none',
+                'font-size': '0.28rem',
                 'position': 'fixed',
                 'margin': 'auto',
                 'top': '30%',
                 'right': 0,
                 'left': 0,
-                'background': '#585e68',
+                'background': 'rgba(17,17,17,0.7)',
                 'color': '#fff',
                 'line-height': 1.5,
-                'padding': '15px',
-                'width': '255px',
-                'text-align': 'center'
+                'padding': '0.3rem',
+                'width': '3rem',
+                'border-radius': '0.1rem',
+                'text-align': 'center',
+                'word-break': 'break-all',
+                'z-index': 9999
             },
             loading: {
                 'display': 'none',
@@ -132,12 +138,15 @@
                 'top': '30%',
                 'right': 0,
                 'left': 0,
+                'border-radius': '0.08rem',
                 'background': '#585e68',
                 'color': '#fff',
                 'line-height': 1.5,
-                'padding': '15px',
-                'width': '255px',
-                'text-align': 'center'
+                'padding': '.2rem',
+                'width': '2rem',
+                'text-align': 'center',
+                'word-break': 'break-all',
+                'z-index': 9999
             }
         };
         var arrStyle = [],
@@ -161,7 +170,7 @@
             _foot = _wrap.children[2];
 
         //主对象
-        var ui = {
+        ui = {
             doms: {
                 dialog: domDialog,
                 mask: _mask,
@@ -209,7 +218,7 @@
             },
             showLoading: function(txt) {
                 var _dom = ui.doms.loading,
-                    _txt = txt || '加载中…';
+                    _txt = txt || '<img style="width: .35rem;height: .35rem;margin-right: .05rem; vertical-align:text-bottom;" src="' + require('./assest/loading.gif') + '" />加载中…';
                 _dom.innerHTML !== _txt && (_dom.innerHTML = _txt);
                 showDom(_dom);
             },
@@ -217,42 +226,33 @@
                 hideDom(ui.doms.loading);
             },
             toast: function(txt, delay, speed) {
-                var _delay = delay || 2000,
+                var _delay = delay || 1500,
                     _max = _delay,
-                    _speed = speed || 40,
+                    _speed = speed || 20,
                     toastId = PLUGINNAME + 'Toast',
-                    _dom = ui.doms.toast;
+                    _dom = ui.doms.toast,
+                    _opacity = 0, //记录透明度
+                    setOpacity = function(dom, opacity) { //设置透明度
+                        isIE8 ? (dom.style.filter = 'alpha(opacity=' + opacity * 10 + ')') : (dom.style.opacity = opacity / 10);
+                    };
                 if (_dom.style.display === 'block') { //防止多个toast同时存在
                     return;
                 }
                 showDom(_dom);
                 _dom.innerHTML = txt;
-                isIE8 ? (_dom.style.filter = 'alpha(opacity=00)') : (_dom.style.opacity = 0);
-                var fadeIn = true,
-                    ie8filter, //专门记录ie8的透明度
+                setOpacity(_dom, _opacity);
+                var fadeIn = true, //淡入还是淡出
                     a = setInterval(function() {
                         _delay -= _speed;
-                        isIE8 && (ie8filter = +_dom.style.filter.match(/\d/g).join(''));
                         if (_delay <= _speed * 10 || _delay >= _max - _speed * 10) {
-                            if (fadeIn) {
-                                if (isIE8) {
-                                    _dom.style.filter = 'alpha(opacity=' + (ie8filter + 10) + ')';
-                                } else {
-                                    _dom.style.opacity = +_dom.style.opacity + 0.1;
-                                }
-                                if (_dom.style.opacity == 1 || ie8filter == 100) {
-                                    fadeIn = false;
-                                }
+                            _opacity += (fadeIn ? 1 : -1);
+                            if (_opacity > 0 && _opacity < 10) {
+                                setOpacity(_dom, _opacity);
+                            } else if (fadeIn) {
+                                fadeIn = false;
                             } else {
-                                if (isIE8) {
-                                    _dom.style.filter = 'alpha(opacity=' + (ie8filter - 10) + ')';
-                                } else {
-                                    _dom.style.opacity -= 0.1;
-                                }
-                                if (_dom.style.opacity == 0 || ie8filter == 0) {
-                                    clearInterval(a);
-                                    hideDom(_dom);
-                                }
+                                clearInterval(a);
+                                hideDom(_dom);
                             }
                         }
                     }, _speed);
@@ -262,6 +262,6 @@
             prevDefault(e)
             hideDom(ui.doms.dialog);
         };
-        window.ui = ui;
     };
+    module.exports = ui;
 }()
