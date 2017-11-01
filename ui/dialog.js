@@ -265,5 +265,7 @@
             hideDom(ui.doms.dialog);
         };
     };
-    module.exports = ui;
+    "object" == typeof exports ? module.exports = ui : "function" == typeof define && (define.cmd || define.amd) ? define(function() {
+        return ui
+    }) : window.ui = ui;
 }()
