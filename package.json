@@ -18,9 +18,15 @@
   "homepage": "https://github.com/zhaolandelong/my-js#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-csso": "^2.0.0",
+    "gulp-file-include": "^1.0.0",
     "gulp-jshint": "^2.0.1",
+    "gulp-less": "^3.3.0",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "gulp-uglify": "^2.0.0",
-    "jshint": "^2.9.3"
-  }
+    "jshint": "^2.9.3",
+    "through2": "^2.0.3"
+  },
+  "dependencies": {}
 }

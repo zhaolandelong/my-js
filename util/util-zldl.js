@@ -24,6 +24,15 @@
             return r != null ? decodeURIComponent(r[2]) : null;
         },
         /**
+         * 倒计时用
+         */
+        countDown: function(t) {
+            var h = Math.floor(t / 3600),
+                m = Math.floor(t / 60) - h * 60,
+                s = t - h * 3600 - m * 60;
+            return h + ':' + (m < 10 ? ('0' + m) : m) + ':' + (s < 10 ? ('0' + s) : s)
+        },
+        /**
          * [getCookie 获取cookie]
          * @param  {[type]} name [要获取的cookie key]
          * @return {[type]}      [description]
@@ -313,6 +322,83 @@
                     }
                 };
             dom.addEventListener('touchstart', handle.start);
+        },
+        /**
+         * 阿拉伯数字转中文数字
+         * 
+         * 中文数字的特点：
+         * 1、每个计数数字都跟着一个权位，权位有：十、百、千、万、亿。
+         * 2、以“万”为小节，对应一个节权位，万以下没有节权位。
+         * 3、每个小节内部以“十百千”为权位独立计数。
+         * 4、“十百千”不能连续出现，而“万”和“亿”作为节权位时可以和其他权位连用，如：“二十亿”。
+         * 
+         * 中文数字对“零”的使用要满足以下三条规则：
+         * 1、以10000为小节，小节的结尾即使是0，也不使用零。
+         * 2、小节内两个非0数字之间要使用“零”。
+         * 3、当小节的“千”位是0时（即：1~999），只要不是首小节，都要补“零”。
+         * 
+         * 算法设计的一些说明：
+         * 1、对“零”的第三个规则，把检测放在循环的最前面并默认为false，可以自然的丢弃最高小节的加零判断。
+         * 2、单个数字转换用数组实现，["零","一","二","三","四","五","六","七","八","九"];
+         * 3、节权位同样用数组实现，["","万","亿","万亿","亿亿"];
+         * 4、节内权位同样用数组实现，["","十","百","千"];
+         */
+        numChar: {
+            num: ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"], //小于10000
+            unit: ["", "十", "百", "千"], //小于10000
+            section: ["", "万", "亿", "万亿", "亿亿"] //大于10000
+        },
+        numToChar: function(section) { //节内转换算法，小于10000
+            var strIns = '',
+                chnStr = '';
+            var unitPos = 0;
+            var zero = true;
+            if (section > 9 && section < 20) {
+                return '十' + (section === 10 ? '' : numChar.num[section % 10]);
+            } else {
+                while (section > 0) {
+                    var v = section % 10;
+                    if (v === 0) {
+                        if (!zero) {
+                            zero = true;
+                            chnStr = numChar.num[v] + chnStr;
+                        }
+                    } else {
+                        zero = false;
+                        strIns = numChar.num[v];
+                        strIns += numChar.unit[unitPos];
+                        chnStr = strIns + chnStr;
+                    }
+                    unitPos++;
+                    section = Math.floor(section / 10);
+                }
+                return chnStr;
+            }
+        },
+        largeToChar: function(num) { //转换算法主函数，所有数，依赖SectionToChinese
+            var unitPos = 0;
+            var strIns = '',
+                chnStr = '';
+            var needZero = false;
+
+            if (num === 0) {
+                return numChar.num[0];
+            }
+
+            while (num > 0) {
+                var section = num % 10000;
+                if (needZero) {
+                    chnStr = numChar.num[0] + chnStr;
+                }
+                strIns = util.numToChar(section);
+                strIns += (section !== 0) ? numChar.section[unitPos] : numChar.section[0];
+                chnStr = strIns + chnStr;
+                needZero = (section < 1000) && (section > 0);
+                num = Math.floor(num / 10000);
+                unitPos++;
+            }
+
+            return chnStr;
         }
     };
     // 对Date的扩展，将 Date 转化为指定格式的String

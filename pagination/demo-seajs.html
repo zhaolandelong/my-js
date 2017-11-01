@@ -11,15 +11,15 @@
         border: 1px solid #ccc;
         padding: 20px;
     }
-    
+
     .show {
         text-align: center;
     }
-    
+
     .show>div {
         margin: 10px 0;
     }
-    
+
     .num {
         color: #f60;
         font-weight: bold;
@@ -44,14 +44,17 @@
     });</pre></li>
         <li>
             <p>html适当位置加入div，id要与下一步实例化中参数对应</p>
-            <pre>&lt;div id="pagination"&gt;&lt;/div&gt;</pre></li>
+            <pre>&lt;div id="paginationId"&gt;&lt;/div&gt;</pre></li>
         <li>
-            <p>js中require('Pagination')或use中声明，并实例化(可实例化多个)new Pagination(id)-id对应html中的元素id</p>
+            <p>js中require('Pagination')或use中声明，并实例化(可实例化多个)new Pagination(options)，options为对象，其属性如下：</p>
+            <p>id-对应html中的元素id(必须 默认pagination)；num-页码个数(默认7)；prev/next-按钮文案(默认 上一页/下一页)</p>
+        </li>
+        <li>
             <p>之后再适当位置调用实例的init(maxpage, callback)方法</p>
             <p>maxpage-最大页码数；callback-翻页执行时触发的回调，默认第一个参数传入n，即当前页码(详见页面源代码)</p>
             <pre>
     seajs.use('Pagination', function(Pagination) {
-        var pagination = new Pagination('pagination');
+        var pagination = new Pagination({id:"pagination",item:7,prev:"上一页",next:"下一页"});
         pagination.init(10,function(n){
             console.log(n);
             //code here
@@ -80,11 +83,11 @@
         </div>
         <div id="pagination2"></div>
     </div>
-    <script src="../../lib/sea.js"></script>
+    <script src="../lib/sea.js"></script>
     <script>
     seajs.config({
         alias: {
-            Pagination: '../min/pagination-zldl-2.0.min.js'
+            Pagination: './min/pagination-chinahr.js'
         }
     });
     seajs.use('Pagination', function(Pagination) {
@@ -98,14 +101,14 @@
             _ensure2 = document.getElementById('ensure2'),
             handle1 = function() {
                 var maxNo1 = _max1.innerHTML = +_input1.value,
-                    pagination1 = new Pagination('pagination1');
+                    pagination1 = new Pagination({id:"pagination1"});
                 pagination1.init(maxNo1, function(n) {
                     _pn1.innerHTML = n;
                 });
             },
             handle2 = function() {
                 var maxNo2 = _max2.innerHTML = +_input2.value,
-                    pagination2 = new Pagination('pagination2');
+                    pagination2 = new Pagination({id:"pagination2",item:5,prev:"＜上一页",next:"下一页＞"});
                 pagination2.init(maxNo2, function(n) {
                     _pn2.innerHTML = n;
                 });
