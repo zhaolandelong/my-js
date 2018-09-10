@@ -4,7 +4,8 @@
   "description": "自己整理和手写的一些常用功能，用法：\r >1、直接引入当前js文件，可在全局window下生成一个util对象，用util.xxx来调用各方法，如util.urlParam('id')，获取url中id参数  \r >2、require引入当前js文件，如var aaa=require('zldl-js');aaa.urlParam('id')，获取url中id参数",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jest.config.js",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -17,16 +18,16 @@
   },
   "homepage": "https://github.com/zhaolandelong/my-js#readme",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-csso": "^2.0.0",
-    "gulp-file-include": "^1.0.0",
-    "gulp-jshint": "^2.0.1",
-    "gulp-less": "^3.3.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.5.4",
-    "gulp-uglify": "^2.0.0",
-    "jshint": "^2.9.3",
-    "through2": "^2.0.3"
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "jest": "^23.6.0",
+    "webpack": "^4.17.3",
+    "webpack-cli": "^3.1.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "number-precision": "^1.2.0"
+  }
 }
